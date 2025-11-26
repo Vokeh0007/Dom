@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Browser Environment & DOM Basics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .intro-section {
+            background: #e8f5e9;
+            border-left: 4px solid #11998e;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .intro-section h2 {
+            color: #11998e;
+            margin-bottom: 15px;
+        }
+
+        .intro-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #11998e;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #11998e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #0d7a6f;
+            transform: translateY(-2px);
+        }
+
+        .demo-box {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .tree-view {
+            background: #282c34;
+            color: #61dafb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .tree-view .indent {
+            margin-left: 20px;
+        }
+
+        .tree-view .tag {
+            color: #e06c75;
+        }
+
+        .tree-view .text {
+            color: #98c379;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .comparison-item h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+
+        .comparison-item.highlight {
+            border-color: #11998e;
+            background: #e8f5e9;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-panel {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-panel {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-panel.show {
+            display: block;
+        }
+
+        .pipeline-stage {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .pipeline-stage::before {
+            content: attr(data-number);
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: #11998e;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .pipeline-stage h4 {
+            color: #11998e;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-stage p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        ul.feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.feature-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #555;
+        }
+
+        ul.feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #11998e;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .interactive-demo {
+            border: 3px dashed #11998e;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .highlight-box {
+            background: #fffacd;
+            border: 2px solid #ffd700;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 1: Browser Environment & DOM Basics</h1>
+        <p class="subtitle">Understanding what the DOM is and how browsers work</p>
+
+        <!-- Introduction -->
+        <div class="intro-section">
+            <h2>🌐 What is the DOM?</h2>
+            <p><strong>DOM = Document Object Model</strong></p>
+            <p>
+                The DOM is <strong>NOT</strong> HTML. It's a live, hierarchical object representation
+                of your HTML that the browser creates after parsing. Think of it as a tree structure
+                that JavaScript can interact with to make web pages dynamic and interactive.
+            </p>
+            <p>
+                <strong>Key Point:</strong> HTML is static text. The DOM is a living, breathing object
+                tree that can change in real-time!
+            </p>
+        </div>
+
+        <!-- Exercise 1: HTML vs DOM -->
+        <div class="exercise">
+            <h3>Exercise 1: Understanding HTML vs DOM</h3>
+            <p>See the difference between static HTML and the dynamic DOM</p>
+
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>📄 HTML (Static)</h4>
+                    <div class="tree-view">
+&lt;p&gt;Hello&lt;/p&gt;
+                    </div>
+                    <p>This is just text - it doesn't change</p>
+                </div>
+
+                <div class="comparison-item highlight">
+                    <h4>🌳 DOM (Dynamic Object)</h4>
+                    <div class="tree-view">
+{
+  tagName: "P",
+  textContent: "Hello",
+  style: {...},
+  classList: {...}
+}
+                    </div>
+                    <p>This is a JavaScript object you can manipulate!</p>
+                </div>
+            </div>
+
+            <button onclick="demonstrateDOM()">Change DOM in Real-Time</button>
+            <div id="domDemo" class="demo-box">
+                <p id="demoText">Original Text</p>
+            </div>
+        </div>
+
+        <!-- Exercise 2: DOM Tree Structure -->
+        <div class="exercise">
+            <h3>Exercise 2: The DOM Tree Structure</h3>
+            <p>Every HTML document becomes a tree of objects</p>
+
+            <div class="tree-view">
+Document
+├── <span class="tag">html</span>
+│   ├── <span class="tag">head</span>
+│   │   ├── <span class="tag">title</span>
+│   │   │   └── <span class="text">"My Page"</span>
+│   │   └── <span class="tag">meta</span>
+│   └── <span class="tag">body</span>
+│       ├── <span class="tag">header</span>
+│       │   └── <span class="tag">h1</span>
+│       │       └── <span class="text">"Welcome"</span>
+│       ├── <span class="tag">main</span>
+│       │   └── <span class="tag">p</span>
+│       │       └── <span class="text">"Content"</span>
+│       └── <span class="tag">footer</span>
+            </div>
+
+            <button onclick="exploreTree()">Explore Current Page Tree</button>
+            <div id="treeResult" class="success-panel"></div>
+        </div>
+
+        <!-- Exercise 3: Browser Rendering Pipeline -->
+        <div class="exercise">
+            <h3>Exercise 3: How Browsers Render Pages</h3>
+            <p>Understanding the browser rendering pipeline</p>
+
+            <div class="pipeline-stage" data-number="1">
+                <h4>Parsing HTML</h4>
+                <p>Browser reads HTML sequentially and creates DOM tree</p>
+            </div>
+
+            <div class="pipeline-stage" data-number="2">
+                <h4>Parsing CSS</h4>
+                <p>Browser reads CSS and creates CSSOM (CSS Object Model)</p>
+            </div>
+
+            <div class="pipeline-stage" data-number="3">
+                <h4>Render Tree</h4>
+                <p>Combines DOM + CSSOM (only includes visible elements)</p>
+            </div>
+
+            <div class="pipeline-stage" data-number="4">
+                <h4>Layout (Reflow)</h4>
+                <p>Calculates exact position and size of every element</p>
+            </div>
+
+            <div class="pipeline-stage" data-number="5">
+                <h4>Paint (Repaint)</h4>
+                <p>Converts layout to actual pixels on screen</p>
+            </div>
+
+            <div class="pipeline-stage" data-number="6">
+                <h4>Composite</h4>
+                <p>Combines all layers and displays final result</p>
+            </div>
+
+            <div class="info-panel">
+                <strong>⚡ Performance Tip:</strong> Reflows are expensive! They happen when you
+                change element dimensions, positions, or display. Minimize them by batching DOM updates.
+            </div>
+        </div>
+
+        <!-- Exercise 4: Reflow vs Repaint -->
+        <div class="exercise">
+            <h3>Exercise 4: Reflow vs Repaint (Performance)</h3>
+            <p>Learn the difference and why it matters</p>
+
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>🔴 Reflow (Expensive)</h4>
+                    <p>Triggered by:</p>
+                    <ul class="feature-list">
+                        <li>Changing width/height</li>
+                        <li>Changing position</li>
+                        <li>Changing display property</li>
+                        <li>Adding/removing elements</li>
+                    </ul>
+                    <button onclick="triggerReflow()">Trigger Reflow</button>
+                </div>
+
+                <div class="comparison-item">
+                    <h4>🟢 Repaint (Less Expensive)</h4>
+                    <p>Triggered by:</p>
+                    <ul class="feature-list">
+                        <li>Changing color</li>
+                        <li>Changing background</li>
+                        <li>Changing visibility</li>
+                        <li>Changing outline</li>
+                    </ul>
+                    <button onclick="triggerRepaint()">Trigger Repaint</button>
+                </div>
+            </div>
+
+            <div id="performanceBox" class="demo-box">
+                Watch me change!
+            </div>
+
+            <div id="performanceInfo" class="success-panel"></div>
+        </div>
+
+        <!-- Exercise 5: Why DOM Matters -->
+        <div class="exercise">
+            <h3>Exercise 5: Why Learn DOM Manipulation?</h3>
+            <p>Real-world applications of DOM skills</p>
+
+            <ul class="feature-list">
+                <li><strong>Dynamic Content:</strong> Update page content without reloading (like Facebook feed)</li>
+                <li><strong>User Interactions:</strong> Respond to clicks, typing, scrolling instantly</li>
+                <li><strong>Form Validation:</strong> Check user input in real-time</li>
+                <li><strong>Animations:</strong> Create smooth transitions and effects</li>
+                <li><strong>Single Page Apps:</strong> Build apps like Gmail, Twitter, Instagram</li>
+                <li><strong>Games:</strong> Create browser-based games</li>
+            </ul>
+
+            <div class="interactive-demo">
+                <h4>Try it yourself:</h4>
+                <p id="clickCounter">Clicks: 0</p>
+                <button onclick="incrementCounter()">Click Me!</button>
+                <button onclick="resetCounter()">Reset</button>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    This is DOM manipulation in action - no page reload needed!
+                </p>
+            </div>
+        </div>
+
+        <!-- Exercise 6: Document Object -->
+        <div class="exercise">
+            <h3>Exercise 6: The Document Object</h3>
+            <p>Everything starts with <code>document</code></p>
+
+            <button onclick="exploreDocument()">Explore Document Object</button>
+            <button onclick="getPageInfo()">Get Page Info</button>
+
+            <div id="documentInfo" class="demo-box" style="display: none;">
+                <h4>Document Properties:</h4>
+                <div id="documentDetails"></div>
+            </div>
+
+            <div class="info-panel">
+                <strong>💡 Key Concept:</strong> The <code>document</code> object is your gateway to
+                the entire DOM. Every DOM operation starts with <code>document</code>!
+            </div>
+        </div>
+
+        <!-- Exercise 7: Window vs Document -->
+        <div class="exercise">
+            <h3>Exercise 7: Window vs Document</h3>
+            <p>Understanding the difference</p>
+
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>🪟 Window Object</h4>
+                    <ul class="feature-list">
+                        <li>Represents browser window</li>
+                        <li>Global JavaScript object</li>
+                        <li>Contains document object</li>
+                        <li>Has methods like alert(), confirm()</li>
+                        <li>Properties: innerWidth, innerHeight</li>
+                    </ul>
+                    <button onclick="showWindowInfo()">Show Window Info</button>
+                </div>
+
+                <div class="comparison-item">
+                    <h4>📄 Document Object</h4>
+                    <ul class="feature-list">
+                        <li>Represents HTML document</li>
+                        <li>Part of window object</li>
+                        <li>Contains DOM tree</li>
+                        <li>Has DOM manipulation methods</li>
+                        <li>Properties: body, head, title</li>
+                    </ul>
+                    <button onclick="showDocumentInfo()">Show Document Info</button>
+                </div>
+            </div>
+
+            <div id="objectInfo" class="success-panel"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="intro-section" style="background: #fff3cd; border-left-color: #ffc107;">
+            <h2>📝 Module Summary</h2>
+            <p><strong>You've learned:</strong></p>
+            <ul class="feature-list">
+                <li>DOM is a live object representation of HTML</li>
+                <li>Browser creates a tree structure from HTML</li>
+                <li>Rendering happens in 6 stages (Parse → Composite)</li>
+                <li>Reflows are expensive, repaints are cheaper</li>
+                <li>Document object is your gateway to DOM</li>
+                <li>DOM enables dynamic, interactive web pages</li>
+            </ul>
+            <p style="margin-top: 15px;">
+                <strong>Next:</strong> Module 2 - Learn how to SELECT elements from the DOM!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+
+        // Exercise 1: Demonstrate DOM
+        function demonstrateDOM() {
+            const element = document.getElementById('demoText');
+
+            // Showing we can change it dynamically!
+            element.textContent = 'Text Changed via DOM!';
+            element.style.color = '#11998e';
+            element.style.fontSize = '24px';
+            element.style.fontWeight = 'bold';
+
+            setTimeout(() => {
+                element.textContent = 'And changed again!';
+                element.style.color = '#e06c75';
+            }, 1500);
+
+            setTimeout(() => {
+                element.textContent = 'Original Text';
+                element.style.color = '';
+                element.style.fontSize = '';
+                element.style.fontWeight = '';
+            }, 3000);
+        }
+
+        // Exercise 2: Explore Tree
+        function exploreTree() {
+            const result = document.getElementById('treeResult');
+
+            const htmlElement = document.documentElement;
+            const headElement = document.head;
+            const bodyElement = document.body;
+
+            result.innerHTML = `
+                <h4>Current Page Structure:</h4>
+                <div class="tree-view">
+Document
+├── ${htmlElement.tagName} (${htmlElement.children.length} children)
+│   ├── ${headElement.tagName} (${headElement.children.length} children)
+│   │   ├── TITLE: "${document.title}"
+│   │   └── ${headElement.children.length - 1} other elements
+│   └── ${bodyElement.tagName} (${bodyElement.children.length} children)
+                </div>
+                <p style="margin-top: 10px; color: #666;">
+                    This is YOUR current page as a DOM tree!
+                </p>
+            `;
+            result.classList.add('show');
+        }
+
+        // Exercise 4: Reflow vs Repaint
+        function triggerReflow() {
+            const box = document.getElementById('performanceBox');
+            const info = document.getElementById('performanceInfo');
+
+            const start = performance.now();
+
+            // This triggers REFLOW (expensive)
+            box.style.width = '400px';
+            box.style.height = '100px';
+            box.style.padding = '30px';
+
+            const end = performance.now();
+
+            info.innerHTML = `
+                <strong>🔴 REFLOW triggered!</strong><br>
+                Changed: width, height, padding<br>
+                Impact: Browser recalculated layout for entire page<br>
+                Time: ${(end - start).toFixed(2)}ms
+            `;
+            info.classList.add('show');
+
+            setTimeout(() => {
+                box.style.width = '';
+                box.style.height = '';
+                box.style.padding = '';
+            }, 2000);
+        }
+
+        function triggerRepaint() {
+            const box = document.getElementById('performanceBox');
+            const info = document.getElementById('performanceInfo');
+
+            const start = performance.now();
+
+            // This triggers REPAINT (less expensive)
+            box.style.color = 'white';
+            box.style.backgroundColor = '#11998e';
+
+            const end = performance.now();
+
+            info.innerHTML = `
+                <strong>🟢 REPAINT triggered!</strong><br>
+                Changed: color, background<br>
+                Impact: Only visual update, no layout recalculation<br>
+                Time: ${(end - start).toFixed(2)}ms (faster!)
+            `;
+            info.classList.add('show');
+
+            setTimeout(() => {
+                box.style.color = '';
+                box.style.backgroundColor = '';
+            }, 2000);
+        }
+
+        // Exercise 5: Counter
+        function incrementCounter() {
+            clickCount++;
+            document.getElementById('clickCounter').textContent = `Clicks: ${clickCount}`;
+        }
+
+        function resetCounter() {
+            clickCount = 0;
+            document.getElementById('clickCounter').textContent = `Clicks: 0`;
+        }
+
+        // Exercise 6: Document Object
+        function exploreDocument() {
+            console.log('Document Object:', document);
+            console.log('Available methods:', Object.getOwnPropertyNames(Document.prototype));
+            alert('Check your browser console to see the document object!');
+        }
+
+        function getPageInfo() {
+            const info = document.getElementById('documentInfo');
+            const details = document.getElementById('documentDetails');
+
+            details.innerHTML = `
+                <strong>Title:</strong> ${document.title}<br>
+                <strong>URL:</strong> ${document.URL}<br>
+                <strong>Domain:</strong> ${document.domain}<br>
+                <strong>Last Modified:</strong> ${document.lastModified}<br>
+                <strong>Character Set:</strong> ${document.characterSet}<br>
+                <strong>Ready State:</strong> ${document.readyState}<br>
+                <strong>Number of Images:</strong> ${document.images.length}<br>
+                <strong>Number of Links:</strong> ${document.links.length}<br>
+                <strong>Number of Scripts:</strong> ${document.scripts.length}
+            `;
+
+            info.style.display = 'block';
+        }
+
+        // Exercise 7: Window vs Document
+        function showWindowInfo() {
+            const info = document.getElementById('objectInfo');
+
+            info.innerHTML = `
+                <h4>🪟 Window Object Info:</h4>
+                <strong>Inner Width:</strong> ${window.innerWidth}px<br>
+                <strong>Inner Height:</strong> ${window.innerHeight}px<br>
+                <strong>Outer Width:</strong> ${window.outerWidth}px<br>
+                <strong>Outer Height:</strong> ${window.outerHeight}px<br>
+                <strong>Screen Width:</strong> ${window.screen.width}px<br>
+                <strong>Screen Height:</strong> ${window.screen.height}px<br>
+                <strong>Location:</strong> ${window.location.href}<br>
+                <strong>Browser:</strong> ${window.navigator.userAgent.split(' ').pop()}
+            `;
+            info.classList.add('show');
+        }
+
+        function showDocumentInfo() {
+            const info = document.getElementById('objectInfo');
+
+            info.innerHTML = `
+                <h4>📄 Document Object Info:</h4>
+                <strong>Title:</strong> ${document.title}<br>
+                <strong>URL:</strong> ${document.URL}<br>
+                <strong>Document Mode:</strong> ${document.compatMode}<br>
+                <strong>Body Tag:</strong> ${document.body.tagName}<br>
+                <strong>Head Tag:</strong> ${document.head.tagName}<br>
+                <strong>Document Element:</strong> ${document.documentElement.tagName}<br>
+                <strong>All Elements Count:</strong> ${document.getElementsByTagName('*').length}<br>
+                <strong>Ready State:</strong> ${document.readyState}
+            `;
+            info.classList.add('show');
+        }
+    </script>
+</body>
+</html>

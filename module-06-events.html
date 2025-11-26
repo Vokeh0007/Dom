@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 6: Events - The Most Important Module</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #fa709a;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #fa709a;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #fa709a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #e8567a;
+            transform: translateY(-2px);
+        }
+
+        .demo-box {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            min-height: 60px;
+        }
+
+        .event-log {
+            background: #282c34;
+            color: #61dafb;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        .event-log div {
+            padding: 5px 0;
+            border-bottom: 1px solid #3a3f4b;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .bubble-container {
+            border: 3px solid #fa709a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .bubble-middle {
+            border: 3px solid #fee140;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+        .bubble-inner {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .item {
+            background: #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item:hover {
+            background: #dee2e6;
+            transform: translateX(5px);
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        form input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .key-display {
+            background: #282c34;
+            color: #61dafb;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-context-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            padding: 10px 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        .custom-context-menu div {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .custom-context-menu div:hover {
+            background: #f8f9fa;
+        }
+
+        .delegation-demo {
+            border: 2px dashed #fa709a;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .status-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 6: Events - The Backbone of Interactivity</h1>
+        <p class="subtitle">Master event listeners, bubbling, delegation, and all event types</p>
+
+        <!-- Exercise 1: Basic Event Listeners -->
+        <div class="exercise">
+            <h3>Exercise 1: Basic Event Listeners</h3>
+            <p>Learn addEventListener() - the modern, professional way</p>
+            <button id="clickBtn">Click Me!</button>
+            <button id="dblClickBtn">Double Click Me!</button>
+            <button id="removeBtn">Remove Event Listener</button>
+            <div id="eventLog1" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 2: Event Object -->
+        <div class="exercise">
+            <h3>Exercise 2: Understanding the Event Object</h3>
+            <p>Explore event.target, event.currentTarget, and other properties</p>
+            <div id="eventBox" class="demo-box">
+                Click anywhere in this box
+                <button style="margin: 20px;">Click this button</button>
+            </div>
+            <div id="eventLog2" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 3: Event Bubbling -->
+        <div class="exercise">
+            <h3>Exercise 3: Event Bubbling (Phase 3)</h3>
+            <p>Watch events bubble up from child to parent to grandparent</p>
+            <button onclick="resetBubbleLog()">Reset Log</button>
+
+            <div id="outer" class="bubble-container">
+                Outer (Grandparent)
+                <div id="middle" class="bubble-middle">
+                    Middle (Parent)
+                    <div id="inner" class="bubble-inner">
+                        <button>Click Me - Watch Bubbling!</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bubbleLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 4: stopPropagation -->
+        <div class="exercise">
+            <h3>Exercise 4: Controlling Propagation</h3>
+            <p>Use stopPropagation() to prevent bubbling</p>
+            <button onclick="resetStopLog()">Reset Log</button>
+
+            <div id="outer2" class="bubble-container">
+                Outer Container
+                <div id="middle2" class="bubble-middle">
+                    Middle Container (stopPropagation here!)
+                    <button id="stopBtn">Click Me</button>
+                </div>
+            </div>
+
+            <div id="stopLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 5: preventDefault -->
+        <div class="exercise">
+            <h3>Exercise 5: preventDefault() - Cancel Default Behavior</h3>
+            <p>Prevent default actions like form submission and link navigation</p>
+
+            <form id="testForm">
+                <input type="text" placeholder="Username" required>
+                <input type="email" placeholder="Email" required>
+                <button type="submit">Submit (Prevented)</button>
+            </form>
+
+            <a href="https://google.com" id="testLink">Click this link (Navigation Prevented)</a>
+
+            <div id="preventLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 6: Event Delegation - CRITICAL PATTERN -->
+        <div class="exercise">
+            <h3>Exercise 6: Event Delegation (Professional Pattern)</h3>
+            <p>ONE listener handles ALL items - even future ones!</p>
+            <button onclick="addDelegatedItem()">Add New Item</button>
+            <button onclick="clearItems()">Clear All</button>
+
+            <div id="delegationContainer" class="delegation-demo">
+                <div class="item" data-id="1">
+                    <span>Item 1 - Click to select</span>
+                    <button class="delete-btn">Delete</button>
+                </div>
+                <div class="item" data-id="2">
+                    <span>Item 2 - Click to select</span>
+                    <button class="delete-btn">Delete</button>
+                </div>
+                <div class="item" data-id="3">
+                    <span>Item 3 - Click to select</span>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            </div>
+
+            <div id="delegationLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 7: Keyboard Events -->
+        <div class="exercise">
+            <h3>Exercise 7: Keyboard Events</h3>
+            <p>Press any key in the box below</p>
+            <input type="text" id="keyInput" placeholder="Type here...">
+            <div id="keyDisplay" class="key-display">Press a key...</div>
+            <div id="keyLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 8: Form Events -->
+        <div class="exercise">
+            <h3>Exercise 8: Form Events (input, change, focus, blur)</h3>
+            <input type="text" id="inputEvent" placeholder="Type to see 'input' event">
+            <input type="text" id="changeEvent" placeholder="Type and blur to see 'change'">
+            <input type="text" id="focusEvent" placeholder="Focus/Blur me">
+            <div id="formEventLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 9: Mouse Events -->
+        <div class="exercise">
+            <h3>Exercise 9: Mouse Events</h3>
+            <div id="mouseBox" class="demo-box" style="height: 150px; background: #e9ecef;">
+                Interact with your mouse here
+            </div>
+            <div id="mouseLog" class="event-log"></div>
+        </div>
+
+        <!-- Exercise 10: Custom Events -->
+        <div class="exercise">
+            <h3>Exercise 10: Custom Events</h3>
+            <p>Create and dispatch your own custom events</p>
+            <button onclick="dispatchSimpleEvent()">Dispatch Simple Event</button>
+            <button onclick="dispatchDataEvent()">Dispatch Event with Data</button>
+            <div id="customEventLog" class="event-log"></div>
+        </div>
+    </div>
+
+    <script>
+        // Exercise 1: Basic Event Listeners
+        let clickCount = 0;
+        const log1 = document.getElementById('eventLog1');
+
+        function handleClick() {
+            clickCount++;
+            addLog(log1, `Button clicked ${clickCount} times`);
+        }
+
+        document.getElementById('clickBtn').addEventListener('click', handleClick);
+
+        document.getElementById('dblClickBtn').addEventListener('dblclick', () => {
+            addLog(log1, 'Button double-clicked!');
+        });
+
+        document.getElementById('removeBtn').addEventListener('click', () => {
+            document.getElementById('clickBtn').removeEventListener('click', handleClick);
+            addLog(log1, 'Event listener REMOVED from click button');
+        });
+
+        // Exercise 2: Event Object
+        const eventBox = document.getElementById('eventBox');
+        const log2 = document.getElementById('eventLog2');
+
+        eventBox.addEventListener('click', (event) => {
+            const info = `
+                Target: ${event.target.tagName}
+                Current Target: ${event.currentTarget.id}
+                Type: ${event.type}
+                Timestamp: ${event.timeStamp.toFixed(0)}ms
+            `;
+            addLog(log2, info);
+        });
+
+        // Exercise 3: Event Bubbling
+        const outer = document.getElementById('outer');
+        const middle = document.getElementById('middle');
+        const inner = document.getElementById('inner');
+        const bubbleLog = document.getElementById('bubbleLog');
+
+        outer.addEventListener('click', () => {
+            addLog(bubbleLog, '3. Outer clicked (BUBBLED UP)');
+        });
+
+        middle.addEventListener('click', () => {
+            addLog(bubbleLog, '2. Middle clicked (BUBBLED UP)');
+        });
+
+        inner.addEventListener('click', () => {
+            addLog(bubbleLog, '1. Inner clicked (TARGET)');
+        });
+
+        function resetBubbleLog() {
+            bubbleLog.innerHTML = '';
+        }
+
+        // Exercise 4: stopPropagation
+        const outer2 = document.getElementById('outer2');
+        const middle2 = document.getElementById('middle2');
+        const stopBtn = document.getElementById('stopBtn');
+        const stopLog = document.getElementById('stopLog');
+
+        outer2.addEventListener('click', () => {
+            addLog(stopLog, 'Outer clicked - Should NOT fire when propagation stopped');
+        });
+
+        middle2.addEventListener('click', (e) => {
+            e.stopPropagation(); // STOPS BUBBLING HERE
+            addLog(stopLog, 'Middle clicked - stopPropagation() called!');
+        });
+
+        stopBtn.addEventListener('click', () => {
+            addLog(stopLog, 'Button clicked');
+        });
+
+        function resetStopLog() {
+            stopLog.innerHTML = '';
+        }
+
+        // Exercise 5: preventDefault
+        const testForm = document.getElementById('testForm');
+        const testLink = document.getElementById('testLink');
+        const preventLog = document.getElementById('preventLog');
+
+        testForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent form submission
+            addLog(preventLog, 'Form submission PREVENTED - No page reload!');
+        });
+
+        testLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent navigation
+            addLog(preventLog, 'Link navigation PREVENTED - No redirect!');
+        });
+
+        // Exercise 6: Event Delegation - THE MOST IMPORTANT PATTERN
+        const delegationContainer = document.getElementById('delegationContainer');
+        const delegationLog = document.getElementById('delegationLog');
+        let itemCounter = 4;
+
+        // ONE listener handles ALL items (current and future)
+        delegationContainer.addEventListener('click', (e) => {
+            // Handle delete button clicks
+            if (e.target.classList.contains('delete-btn')) {
+                const item = e.target.closest('.item');
+                const id = item.dataset.id;
+                item.remove();
+                addLog(delegationLog, `Item ${id} deleted via delegation`);
+                return;
+            }
+
+            // Handle item clicks
+            const item = e.target.closest('.item');
+            if (item) {
+                // Remove previous selection
+                document.querySelectorAll('.item').forEach(i => {
+                    i.style.background = '#e9ecef';
+                });
+
+                // Highlight clicked item
+                item.style.background = '#d4edda';
+                addLog(delegationLog, `Item ${item.dataset.id} selected via delegation`);
+            }
+        });
+
+        function addDelegatedItem() {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.dataset.id = itemCounter;
+            div.innerHTML = `
+                <span>Item ${itemCounter} - Click to select (dynamically added!)</span>
+                <button class="delete-btn">Delete</button>
+            `;
+            delegationContainer.appendChild(div);
+            addLog(delegationLog, `Item ${itemCounter} added - delegation works automatically!`);
+            itemCounter++;
+        }
+
+        function clearItems() {
+            delegationContainer.innerHTML = '';
+            delegationLog.innerHTML = '';
+        }
+
+        // Exercise 7: Keyboard Events
+        const keyInput = document.getElementById('keyInput');
+        const keyDisplay = document.getElementById('keyDisplay');
+        const keyLog = document.getElementById('keyLog');
+
+        document.addEventListener('keydown', (e) => {
+            if (document.activeElement === keyInput) {
+                keyDisplay.textContent = e.key;
+                addLog(keyLog, `Key: ${e.key} | Code: ${e.code} | Ctrl: ${e.ctrlKey} | Shift: ${e.shiftKey}`);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                addLog(keyLog, '⚡ Ctrl+S detected - Save shortcut!');
+            }
+        });
+
+        // Exercise 8: Form Events
+        const inputEvent = document.getElementById('inputEvent');
+        const changeEvent = document.getElementById('changeEvent');
+        const focusEvent = document.getElementById('focusEvent');
+        const formEventLog = document.getElementById('formEventLog');
+
+        inputEvent.addEventListener('input', (e) => {
+            addLog(formEventLog, `input event: ${e.target.value}`);
+        });
+
+        changeEvent.addEventListener('change', (e) => {
+            addLog(formEventLog, `change event: ${e.target.value}`);
+        });
+
+        focusEvent.addEventListener('focus', () => {
+            addLog(formEventLog, 'focus event - Element focused');
+        });
+
+        focusEvent.addEventListener('blur', () => {
+            addLog(formEventLog, 'blur event - Element blurred');
+        });
+
+        // Exercise 9: Mouse Events
+        const mouseBox = document.getElementById('mouseBox');
+        const mouseLog = document.getElementById('mouseLog');
+
+        mouseBox.addEventListener('mouseenter', () => {
+            addLog(mouseLog, 'mouseenter - Mouse entered box');
+            mouseBox.style.background = '#d4edda';
+        });
+
+        mouseBox.addEventListener('mouseleave', () => {
+            addLog(mouseLog, 'mouseleave - Mouse left box');
+            mouseBox.style.background = '#e9ecef';
+        });
+
+        mouseBox.addEventListener('mousemove', (e) => {
+            const x = e.offsetX;
+            const y = e.offsetY;
+            mouseBox.textContent = `Mouse position: X=${x}, Y=${y}`;
+        });
+
+        // Exercise 10: Custom Events
+        const customEventLog = document.getElementById('customEventLog');
+
+        // Listen for custom events
+        document.addEventListener('userAction', (e) => {
+            addLog(customEventLog, 'Custom event "userAction" received!');
+        });
+
+        document.addEventListener('productAdded', (e) => {
+            addLog(customEventLog, `Product added: ${e.detail.name} - KES ${e.detail.price}`);
+        });
+
+        function dispatchSimpleEvent() {
+            const event = new Event('userAction', { bubbles: true });
+            document.dispatchEvent(event);
+        }
+
+        function dispatchDataEvent() {
+            const event = new CustomEvent('productAdded', {
+                detail: {
+                    id: 123,
+                    name: 'Laptop',
+                    price: 50000
+                },
+                bubbles: true
+            });
+            document.dispatchEvent(event);
+        }
+
+        // Helper function to add logs
+        function addLog(logElement, message) {
+            const div = document.createElement('div');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logElement.insertBefore(div, logElement.firstChild);
+
+            // Keep only last 10 logs
+            while (logElement.children.length > 10) {
+                logElement.removeChild(logElement.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>

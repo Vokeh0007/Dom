@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 7: Advanced DOM Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #0093E9;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #0093E9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #0093E9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #0077c2;
+            transform: translateY(-2px);
+        }
+
+        .demo-box {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .measure-box {
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin: 20px;
+            border: 10px solid #333;
+            overflow: auto;
+        }
+
+        .measure-box-inner {
+            width: 500px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-panel {
+            background: #282c34;
+            color: #61dafb;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .animation-box {
+            width: 100px;
+            height: 100px;
+            background: #fa709a;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .viewport-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            z-index: 1000;
+        }
+
+        .scroll-box {
+            height: 300px;
+            overflow-y: scroll;
+            border: 2px solid #ddd;
+            padding: 20px;
+        }
+
+        .scroll-content {
+            height: 1000px;
+            background: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+        }
+
+        .intersection-box {
+            height: 200px;
+            background: #e9ecef;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ddd;
+            transition: all 0.5s;
+        }
+
+        .intersection-box.visible {
+            background: #d4edda;
+            border-color: #28a745;
+            transform: scale(1.05);
+        }
+
+        .lazy-image {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .lazy-image img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 7: Advanced DOM Concepts</h1>
+        <p class="subtitle">Master measurements, performance, observers, and advanced APIs</p>
+
+        <!-- Exercise 1: Element Measurements -->
+        <div class="exercise">
+            <h3>Exercise 1: Element Size and Position Properties</h3>
+            <p>Learn offsetWidth, clientWidth, scrollWidth, and getBoundingClientRect()</p>
+            <button onclick="measureElement()">Get All Measurements</button>
+            <button onclick="checkViewport()">Check if in Viewport</button>
+
+            <div id="measureBox" class="measure-box">
+                Scrollable Box with Border
+                <div class="measure-box-inner">
+                    Inner content that scrolls...
+                    <br><br>
+                    This box demonstrates different measurement properties.
+                </div>
+            </div>
+
+            <div id="measureInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 2: getBoundingClientRect -->
+        <div class="exercise">
+            <h3>Exercise 2: getBoundingClientRect() - Viewport Position</h3>
+            <p>Get precise position relative to viewport</p>
+            <button onclick="getRect()">Get Bounding Rect</button>
+            <button onclick="scrollToBox()">Scroll to Box</button>
+
+            <div style="height: 300px; background: #f0f0f0; margin: 20px 0;">
+                Scroll down to see the target box...
+            </div>
+
+            <div id="targetBox" class="demo-box" style="background: #ffe5e5;">
+                Target Box - Check my position!
+            </div>
+
+            <div id="rectInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 3: Scroll Events and Position -->
+        <div class="exercise">
+            <h3>Exercise 3: Scroll Position and Events</h3>
+            <p>Track scroll position and detect scroll events</p>
+
+            <div id="scrollBox" class="scroll-box">
+                <div class="scroll-content">
+                    <h2>Scroll Me!</h2>
+                    <p>Scroll position is tracked in real-time</p>
+                    <br><br>
+                    Keep scrolling...
+                    <br><br><br><br><br><br>
+                    Middle section
+                    <br><br><br><br><br><br>
+                    Almost at the bottom...
+                    <br><br><br><br><br><br>
+                    You made it to the bottom!
+                </div>
+            </div>
+
+            <div id="scrollInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 4: requestAnimationFrame -->
+        <div class="exercise">
+            <h3>Exercise 4: requestAnimationFrame() for Smooth Animations</h3>
+            <p>The proper way to animate DOM elements</p>
+            <button onclick="startRAF()">Animate with RAF</button>
+            <button onclick="startSetTimeout()">Animate with setTimeout</button>
+            <button onclick="stopAnimation()">Stop</button>
+
+            <div id="animationBox" class="animation-box"></div>
+            <div id="animationInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 5: Intersection Observer -->
+        <div class="exercise">
+            <h3>Exercise 5: Intersection Observer API</h3>
+            <p>Detect when elements enter/leave viewport - Used for lazy loading, infinite scroll</p>
+            <button onclick="setupObserver()">Setup Observer</button>
+            <button onclick="disconnectObserver()">Disconnect Observer</button>
+
+            <div style="height: 200px; background: #f0f0f0;">Scroll down...</div>
+
+            <div class="intersection-box" data-index="1">Box 1 - Not in view yet</div>
+            <div class="intersection-box" data-index="2">Box 2 - Not in view yet</div>
+            <div class="intersection-box" data-index="3">Box 3 - Not in view yet</div>
+            <div class="intersection-box" data-index="4">Box 4 - Not in view yet</div>
+
+            <div id="observerInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 6: Performance - Document Fragment -->
+        <div class="exercise">
+            <h3>Exercise 6: Performance Optimization with Document Fragment</h3>
+            <p>Avoid multiple reflows when adding many elements</p>
+            <button onclick="inefficientInsert()">Inefficient (Multiple Reflows)</button>
+            <button onclick="efficientInsert()">Efficient (Single Reflow)</button>
+            <button onclick="clearPerformanceTest()">Clear</button>
+
+            <div id="performanceContainer" class="demo-box"></div>
+            <div id="performanceInfo" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 7: MutationObserver -->
+        <div class="exercise">
+            <h3>Exercise 7: MutationObserver - Watch DOM Changes</h3>
+            <p>Get notified when DOM changes occur</p>
+            <button onclick="startMutationObserver()">Start Observing</button>
+            <button onclick="stopMutationObserver()">Stop Observing</button>
+            <button onclick="modifyDOM()">Modify DOM</button>
+            <button onclick="clearMutations()">Clear Log</button>
+
+            <div id="mutationTarget" class="demo-box">
+                Original Content
+            </div>
+
+            <div id="mutationLog" class="info-panel"></div>
+        </div>
+
+        <!-- Exercise 8: Window Events -->
+        <div class="exercise">
+            <h3>Exercise 8: Window Events (resize, scroll, load)</h3>
+            <p>Respond to window-level events</p>
+            <div id="windowInfo" class="info-panel">
+                Resize the window or scroll the page to see updates...
+            </div>
+        </div>
+    </div>
+
+    <!-- Viewport Indicator -->
+    <div id="viewportIndicator" class="viewport-indicator">
+        Window: 0 x 0
+    </div>
+
+    <script>
+        // Exercise 1: Measurements
+        function measureElement() {
+            const box = document.getElementById('measureBox');
+            const info = document.getElementById('measureInfo');
+
+            info.innerHTML = `
+<strong>Element Measurements:</strong>
+
+offsetWidth:  ${box.offsetWidth}px  (width + padding + border)
+offsetHeight: ${box.offsetHeight}px (height + padding + border)
+
+clientWidth:  ${box.clientWidth}px  (width + padding, NO border)
+clientHeight: ${box.clientHeight}px (height + padding, NO border)
+
+scrollWidth:  ${box.scrollWidth}px  (total scrollable width)
+scrollHeight: ${box.scrollHeight}px (total scrollable height)
+
+scrollTop:    ${box.scrollTop}px    (pixels scrolled from top)
+scrollLeft:   ${box.scrollLeft}px   (pixels scrolled from left)
+            `;
+        }
+
+        function checkViewport() {
+            const box = document.getElementById('measureBox');
+            const rect = box.getBoundingClientRect();
+            const inView = (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= window.innerHeight &&
+                rect.right <= window.innerWidth
+            );
+
+            const info = document.getElementById('measureInfo');
+            info.innerHTML = `
+<strong>Viewport Check:</strong>
+
+Element is ${inView ? 'FULLY' : 'NOT FULLY'} in viewport
+
+Top: ${rect.top}px
+Left: ${rect.left}px
+Bottom: ${rect.bottom}px
+Right: ${rect.right}px
+            `;
+        }
+
+        // Exercise 2: getBoundingClientRect
+        function getRect() {
+            const box = document.getElementById('targetBox');
+            const rect = box.getBoundingClientRect();
+            const info = document.getElementById('rectInfo');
+
+            info.innerHTML = `
+<strong>Bounding Client Rect:</strong>
+
+top:    ${rect.top.toFixed(2)}px    (distance from top of viewport)
+left:   ${rect.left.toFixed(2)}px   (distance from left of viewport)
+right:  ${rect.right.toFixed(2)}px  (distance from left to right edge)
+bottom: ${rect.bottom.toFixed(2)}px (distance from top to bottom edge)
+width:  ${rect.width}px
+height: ${rect.height}px
+            `;
+        }
+
+        function scrollToBox() {
+            const box = document.getElementById('targetBox');
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Exercise 3: Scroll Events
+        const scrollBox = document.getElementById('scrollBox');
+        const scrollInfo = document.getElementById('scrollInfo');
+
+        scrollBox.addEventListener('scroll', () => {
+            const scrollPercent = (scrollBox.scrollTop / (scrollBox.scrollHeight - scrollBox.clientHeight)) * 100;
+
+            scrollInfo.innerHTML = `
+<strong>Scroll Position:</strong>
+
+scrollTop:    ${scrollBox.scrollTop}px
+scrollHeight: ${scrollBox.scrollHeight}px
+clientHeight: ${scrollBox.clientHeight}px
+Progress:     ${scrollPercent.toFixed(1)}%
+            `;
+        });
+
+        // Exercise 4: requestAnimationFrame
+        let animationId = null;
+        let position = 0;
+
+        function startRAF() {
+            stopAnimation();
+            const box = document.getElementById('animationBox');
+            const info = document.getElementById('animationInfo');
+            const startTime = performance.now();
+            let frameCount = 0;
+
+            function animate() {
+                position += 2;
+                if (position > 500) position = 0;
+
+                box.style.transform = `translateX(${position}px)`;
+                frameCount++;
+
+                const elapsed = performance.now() - startTime;
+                const fps = (frameCount / elapsed * 1000).toFixed(1);
+
+                info.textContent = `RAF Animation | Position: ${position}px | FPS: ${fps}`;
+
+                animationId = requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        function startSetTimeout() {
+            stopAnimation();
+            const box = document.getElementById('animationBox');
+            const info = document.getElementById('animationInfo');
+
+            function animate() {
+                position += 2;
+                if (position > 500) position = 0;
+
+                box.style.transform = `translateX(${position}px)`;
+                info.textContent = `setTimeout Animation | Position: ${position}px`;
+
+                animationId = setTimeout(animate, 16); // ~60fps
+            }
+
+            animate();
+        }
+
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                clearTimeout(animationId);
+                animationId = null;
+            }
+        }
+
+        // Exercise 5: Intersection Observer
+        let observer = null;
+
+        function setupObserver() {
+            const info = document.getElementById('observerInfo');
+
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const box = entry.target;
+                    const index = box.dataset.index;
+
+                    if (entry.isIntersecting) {
+                        box.classList.add('visible');
+                        box.textContent = `Box ${index} - IN VIEWPORT ✓`;
+                        info.textContent = `Box ${index} entered viewport!`;
+                    } else {
+                        box.classList.remove('visible');
+                        box.textContent = `Box ${index} - Not in view`;
+                    }
+                });
+            }, {
+                threshold: 0.5 // Trigger when 50% visible
+            });
+
+            document.querySelectorAll('.intersection-box').forEach(box => {
+                observer.observe(box);
+            });
+
+            info.textContent = 'Observer setup! Scroll to see boxes enter viewport...';
+        }
+
+        function disconnectObserver() {
+            if (observer) {
+                observer.disconnect();
+                document.getElementById('observerInfo').textContent = 'Observer disconnected';
+            }
+        }
+
+        // Exercise 6: Performance
+        function inefficientInsert() {
+            const container = document.getElementById('performanceContainer');
+            container.innerHTML = '';
+            const start = performance.now();
+
+            // BAD: 500 reflows
+            for (let i = 0; i < 500; i++) {
+                const div = document.createElement('div');
+                div.textContent = `Item ${i + 1}`;
+                div.style.padding = '5px';
+                div.style.borderBottom = '1px solid #ddd';
+                container.appendChild(div); // Reflow each time!
+            }
+
+            const end = performance.now();
+            document.getElementById('performanceInfo').textContent =
+                `Inefficient: ${(end - start).toFixed(2)}ms (500 reflows)`;
+        }
+
+        function efficientInsert() {
+            const container = document.getElementById('performanceContainer');
+            container.innerHTML = '';
+            const start = performance.now();
+
+            // GOOD: 1 reflow
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < 500; i++) {
+                const div = document.createElement('div');
+                div.textContent = `Item ${i + 1}`;
+                div.style.padding = '5px';
+                div.style.borderBottom = '1px solid #ddd';
+                fragment.appendChild(div);
+            }
+
+            container.appendChild(fragment); // Single reflow!
+
+            const end = performance.now();
+            document.getElementById('performanceInfo').textContent =
+                `Efficient: ${(end - start).toFixed(2)}ms (1 reflow)`;
+        }
+
+        function clearPerformanceTest() {
+            document.getElementById('performanceContainer').innerHTML = '';
+            document.getElementById('performanceInfo').textContent = '';
+        }
+
+        // Exercise 7: MutationObserver
+        let mutationObserver = null;
+
+        function startMutationObserver() {
+            const target = document.getElementById('mutationTarget');
+            const log = document.getElementById('mutationLog');
+
+            mutationObserver = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    log.innerHTML += `
+<strong>Mutation detected:</strong>
+Type: ${mutation.type}
+Target: ${mutation.target.tagName}
+${mutation.addedNodes.length ? `Added: ${mutation.addedNodes.length} nodes` : ''}
+${mutation.removedNodes.length ? `Removed: ${mutation.removedNodes.length} nodes` : ''}
+---
+`;
+                });
+            });
+
+            mutationObserver.observe(target, {
+                childList: true,
+                attributes: true,
+                characterData: true,
+                subtree: true
+            });
+
+            log.textContent = 'MutationObserver started! Watching for changes...';
+        }
+
+        function stopMutationObserver() {
+            if (mutationObserver) {
+                mutationObserver.disconnect();
+                document.getElementById('mutationLog').textContent = 'Observer stopped';
+            }
+        }
+
+        function modifyDOM() {
+            const target = document.getElementById('mutationTarget');
+            const p = document.createElement('p');
+            p.textContent = `Added at ${new Date().toLocaleTimeString()}`;
+            p.style.color = '#fa709a';
+            target.appendChild(p);
+        }
+
+        function clearMutations() {
+            document.getElementById('mutationTarget').innerHTML = 'Original Content';
+            document.getElementById('mutationLog').textContent = '';
+        }
+
+        // Exercise 8: Window Events
+        const windowInfo = document.getElementById('windowInfo');
+        const viewportIndicator = document.getElementById('viewportIndicator');
+
+        function updateWindowInfo() {
+            windowInfo.innerHTML = `
+<strong>Window Properties:</strong>
+
+innerWidth:  ${window.innerWidth}px  (viewport width)
+innerHeight: ${window.innerHeight}px (viewport height)
+scrollX:     ${window.scrollX}px     (horizontal scroll)
+scrollY:     ${window.scrollY}px     (vertical scroll)
+
+Screen:
+  width:  ${screen.width}px
+  height: ${screen.height}px
+            `;
+
+            viewportIndicator.textContent = `Window: ${window.innerWidth} x ${window.innerHeight}`;
+        }
+
+        window.addEventListener('resize', updateWindowInfo);
+        window.addEventListener('scroll', updateWindowInfo);
+        window.addEventListener('load', updateWindowInfo);
+
+        // Initial update
+        updateWindowInfo();
+    </script>
+</body>
+</html>

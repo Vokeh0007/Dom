@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 8: Forms & Validation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        input.error, textarea.error, select.error {
+            border-color: #dc3545;
+        }
+
+        input.success, textarea.success, select.success {
+            border-color: #28a745;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-panel {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .password-strength {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s;
+            border-radius: 3px;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-item input, .radio-item input {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 8: Forms & Validation</h1>
+        <p class="subtitle">Master form handling, validation, FormData API, and user input</p>
+
+        <!-- Exercise 1: Basic Form Handling -->
+        <div class="exercise">
+            <h3>Exercise 1: Basic Form Submit Handler</h3>
+            <p>Prevent default submission and access form data</p>
+
+            <form id="form1">
+                <div class="form-group">
+                    <label for="name1">Name</label>
+                    <input type="text" id="name1" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email1">Email</label>
+                    <input type="email" id="email1" name="email" required>
+                </div>
+
+                <button type="submit">Submit</button>
+            </form>
+
+            <div id="result1" class="success-message"></div>
+        </div>
+
+        <!-- Exercise 2: Real-time Validation -->
+        <div class="exercise">
+            <h3>Exercise 2: Real-time Input Validation</h3>
+            <p>Validate as user types with visual feedback</p>
+
+            <form id="form2">
+                <div class="form-group">
+                    <label for="username">Username (min 3 characters)</label>
+                    <input type="text" id="username" name="username" required>
+                    <div class="error-message" id="usernameError">Username must be at least 3 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email2">Email</label>
+                    <input type="email" id="email2" name="email" required>
+                    <div class="error-message" id="emailError">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+                </div>
+
+                <button type="submit">Register</button>
+            </form>
+
+            <div id="result2" class="success-message"></div>
+        </div>
+
+        <!-- Exercise 3: FormData API -->
+        <div class="exercise">
+            <h3>Exercise 3: FormData API</h3>
+            <p>Modern way to collect and send form data</p>
+
+            <form id="form3">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" min="1" max="150" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" required>
+                        <option value="">Select...</option>
+                        <option value="KE">Kenya</option>
+                        <option value="UG">Uganda</option>
+                        <option value="TZ">Tanzania</option>
+                        <option value="RW">Rwanda</option>
+                    </select>
+                </div>
+
+                <button type="submit">Submit with FormData</button>
+            </form>
+
+            <div id="result3" class="info-panel" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 4: Checkboxes and Radio Buttons -->
+        <div class="exercise">
+            <h3>Exercise 4: Checkboxes & Radio Buttons</h3>
+
+            <form id="form4">
+                <div class="form-group">
+                    <label>Select your skills:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="html" name="skills" value="HTML">
+                            <label for="html">HTML</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="css" name="skills" value="CSS">
+                            <label for="css">CSS</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="js" name="skills" value="JavaScript">
+                            <label for="js">JavaScript</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="react" name="skills" value="React">
+                            <label for="react">React</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Experience Level:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="beginner" name="level" value="beginner">
+                            <label for="beginner">Beginner</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="intermediate" name="level" value="intermediate">
+                            <label for="intermediate">Intermediate</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="advanced" name="level" value="advanced">
+                            <label for="advanced">Advanced</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit">Submit Selections</button>
+            </form>
+
+            <div id="result4" class="info-panel" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 5: Character Counter -->
+        <div class="exercise">
+            <h3>Exercise 5: Character Counter & Limit</h3>
+
+            <form id="form5">
+                <div class="form-group">
+                    <label for="bio">Bio (max 200 characters)</label>
+                    <textarea id="bio" name="bio" rows="5" maxlength="200"></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span> / 200 characters
+                    </div>
+                </div>
+
+                <button type="submit">Save Bio</button>
+            </form>
+
+            <div id="result5" class="success-message"></div>
+        </div>
+
+        <!-- Exercise 6: Dynamic Form Fields -->
+        <div class="exercise">
+            <h3>Exercise 6: Add/Remove Dynamic Fields</h3>
+
+            <form id="form6">
+                <div id="phoneFields">
+                    <div class="form-group">
+                        <label>Phone Number 1</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                </div>
+
+                <button type="button" onclick="addPhoneField()">+ Add Phone Number</button>
+                <button type="submit">Submit</button>
+            </form>
+
+            <div id="result6" class="success-message"></div>
+        </div>
+
+        <!-- Exercise 7: Complete Registration Form -->
+        <div class="exercise">
+            <h3>Exercise 7: Complete Registration Form with All Validations</h3>
+
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="regName">Full Name *</label>
+                    <input type="text" id="regName" name="name" required>
+                    <div class="error-message" id="regNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email *</label>
+                    <input type="email" id="regEmail" name="email" required>
+                    <div class="error-message" id="regEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Password *</label>
+                    <input type="password" id="regPassword" name="password" required>
+                    <div class="error-message" id="regPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regConfirm">Confirm Password *</label>
+                    <input type="password" id="regConfirm" name="confirmPassword" required>
+                    <div class="error-message" id="regConfirmError"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to terms and conditions *</label>
+                    </div>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+
+                <button type="submit">Complete Registration</button>
+            </form>
+
+            <div id="registrationResult" class="success-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Exercise 1: Basic Form Handling
+        document.getElementById('form1').addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent page reload
+
+            const formData = new FormData(e.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+
+            const result = document.getElementById('result1');
+            result.innerHTML = `
+                <strong>Form Submitted!</strong><br>
+                Name: ${name}<br>
+                Email: ${email}
+            `;
+            result.classList.add('show');
+
+            e.target.reset();
+        });
+
+        // Exercise 2: Real-time Validation
+        const username = document.getElementById('username');
+        const email2 = document.getElementById('email2');
+        const password = document.getElementById('password');
+
+        username.addEventListener('input', () => {
+            const error = document.getElementById('usernameError');
+            if (username.value.length < 3) {
+                username.classList.add('error');
+                username.classList.remove('success');
+                error.classList.add('show');
+            } else {
+                username.classList.remove('error');
+                username.classList.add('success');
+                error.classList.remove('show');
+            }
+        });
+
+        email2.addEventListener('input', () => {
+            const error = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(email2.value)) {
+                email2.classList.add('error');
+                email2.classList.remove('success');
+                error.classList.add('show');
+            } else {
+                email2.classList.remove('error');
+                email2.classList.add('success');
+                error.classList.remove('show');
+            }
+        });
+
+        password.addEventListener('input', () => {
+            const error = document.getElementById('passwordError');
+            const strengthBar = document.getElementById('strengthBar');
+            const value = password.value;
+
+            // Password strength
+            let strength = 0;
+            if (value.length >= 8) strength++;
+            if (/[a-z]/.test(value)) strength++;
+            if (/[A-Z]/.test(value)) strength++;
+            if (/[0-9]/.test(value)) strength++;
+            if (/[^a-zA-Z0-9]/.test(value)) strength++;
+
+            const strengthPercent = (strength / 5) * 100;
+            strengthBar.style.width = `${strengthPercent}%`;
+
+            if (strength < 2) {
+                strengthBar.style.background = '#dc3545';
+            } else if (strength < 4) {
+                strengthBar.style.background = '#ffc107';
+            } else {
+                strengthBar.style.background = '#28a745';
+            }
+
+            if (value.length < 8) {
+                password.classList.add('error');
+                password.classList.remove('success');
+                error.classList.add('show');
+            } else {
+                password.classList.remove('error');
+                password.classList.add('success');
+                error.classList.remove('show');
+            }
+        });
+
+        document.getElementById('form2').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const result = document.getElementById('result2');
+            result.innerHTML = '<strong>✓ Registration Successful!</strong>';
+            result.classList.add('show');
+
+            e.target.reset();
+            document.getElementById('strengthBar').style.width = '0';
+        });
+
+        // Exercise 3: FormData API
+        document.getElementById('form3').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const result = document.getElementById('result3');
+
+            let output = '<strong>FormData Contents:</strong><br>';
+
+            // Iterate through all form data
+            for (let [key, value] of formData.entries()) {
+                output += `${key}: ${value}<br>`;
+            }
+
+            result.innerHTML = output;
+            result.style.display = 'block';
+        });
+
+        // Exercise 4: Checkboxes and Radio
+        document.getElementById('form4').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get selected checkboxes
+            const selectedSkills = Array.from(
+                document.querySelectorAll('input[name="skills"]:checked')
+            ).map(cb => cb.value);
+
+            // Get selected radio
+            const selectedLevel = document.querySelector('input[name="level"]:checked')?.value;
+
+            const result = document.getElementById('result4');
+            result.innerHTML = `
+                <strong>Selections:</strong><br>
+                Skills: ${selectedSkills.join(', ') || 'None'}<br>
+                Level: ${selectedLevel || 'Not selected'}
+            `;
+            result.style.display = 'block';
+        });
+
+        // Exercise 5: Character Counter
+        const bioInput = document.getElementById('bio');
+        const charCount = document.getElementById('charCount');
+
+        bioInput.addEventListener('input', () => {
+            charCount.textContent = bioInput.value.length;
+
+            if (bioInput.value.length > 180) {
+                charCount.style.color = '#dc3545';
+            } else {
+                charCount.style.color = '#666';
+            }
+        });
+
+        document.getElementById('form5').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const result = document.getElementById('result5');
+            result.innerHTML = '<strong>✓ Bio Saved!</strong>';
+            result.classList.add('show');
+
+            setTimeout(() => {
+                result.classList.remove('show');
+                e.target.reset();
+                charCount.textContent = '0';
+                charCount.style.color = '#666';
+            }, 3000);
+        });
+
+        // Exercise 6: Dynamic Fields
+        let phoneCount = 1;
+
+        function addPhoneField() {
+            phoneCount++;
+            const container = document.getElementById('phoneFields');
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.innerHTML = `
+                <label>Phone Number ${phoneCount}</label>
+                <input type="tel" name="phone" required>
+            `;
+            container.appendChild(div);
+        }
+
+        document.getElementById('form6').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const phones = Array.from(
+                document.querySelectorAll('#form6 input[name="phone"]')
+            ).map(input => input.value);
+
+            const result = document.getElementById('result6');
+            result.innerHTML = `
+                <strong>✓ Phone Numbers Submitted:</strong><br>
+                ${phones.map((phone, i) => `${i + 1}. ${phone}`).join('<br>')}
+            `;
+            result.classList.add('show');
+        });
+
+        // Exercise 7: Complete Registration
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('regName');
+            const email = document.getElementById('regEmail');
+            const pass = document.getElementById('regPassword');
+            const confirm = document.getElementById('regConfirm');
+            const terms = document.getElementById('terms');
+
+            let isValid = true;
+
+            // Validate name
+            if (name.value.trim().length < 2) {
+                showError('regNameError', 'Name must be at least 2 characters');
+                name.classList.add('error');
+                isValid = false;
+            } else {
+                hideError('regNameError');
+                name.classList.remove('error');
+                name.classList.add('success');
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                showError('regEmailError', 'Please enter a valid email');
+                email.classList.add('error');
+                isValid = false;
+            } else {
+                hideError('regEmailError');
+                email.classList.remove('error');
+                email.classList.add('success');
+            }
+
+            // Validate password
+            if (pass.value.length < 8) {
+                showError('regPasswordError', 'Password must be at least 8 characters');
+                pass.classList.add('error');
+                isValid = false;
+            } else {
+                hideError('regPasswordError');
+                pass.classList.remove('error');
+                pass.classList.add('success');
+            }
+
+            // Validate confirm password
+            if (pass.value !== confirm.value) {
+                showError('regConfirmError', 'Passwords do not match');
+                confirm.classList.add('error');
+                isValid = false;
+            } else {
+                hideError('regConfirmError');
+                confirm.classList.remove('error');
+                confirm.classList.add('success');
+            }
+
+            // Validate terms
+            if (!terms.checked) {
+                showError('termsError', 'You must accept the terms');
+                isValid = false;
+            } else {
+                hideError('termsError');
+            }
+
+            if (isValid) {
+                const result = document.getElementById('registrationResult');
+                result.innerHTML = `
+                    <strong>✓ Registration Complete!</strong><br>
+                    Welcome, ${name.value}!<br>
+                    A confirmation email has been sent to ${email.value}
+                `;
+                result.classList.add('show');
+
+                e.target.reset();
+                document.querySelectorAll('.success').forEach(el => {
+                    el.classList.remove('success');
+                });
+            }
+        });
+
+        function showError(id, message) {
+            const error = document.getElementById(id);
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError(id) {
+            const error = document.getElementById(id);
+            error.classList.remove('show');
+        }
+    </script>
+</body>
+</html>

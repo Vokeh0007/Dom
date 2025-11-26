@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: DOM Selection - The Core Skill</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .intro-section {
+            background: #e3f2fd;
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .intro-section h2 {
+            color: #4facfe;
+            margin-bottom: 15px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #2196F3;
+            transform: translateY(-2px);
+        }
+
+        .demo-area {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            border-color: #4facfe;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.2);
+        }
+
+        .product-card.selected {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .product-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .product-card .price {
+            color: #4facfe;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .method-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .method-card h4 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+
+        .method-card .syntax {
+            background: #282c34;
+            color: #61dafb;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .method-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .method-card li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+        }
+
+        .method-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .result-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #4facfe;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .badge-fast {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-flexible {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .item {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .item.highlight {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 2: DOM Selection</h1>
+        <p class="subtitle">Master the art of selecting elements - The foundation of DOM manipulation</p>
+
+        <!-- Introduction -->
+        <div class="intro-section">
+            <h2>🎯 Why Selection Matters</h2>
+            <p>
+                <strong>You cannot manipulate what you cannot select!</strong>
+            </p>
+            <p>
+                DOM selection is the gateway to all DOM operations. Before you can change content,
+                styles, or respond to events, you must first select the element. This module teaches
+                you every selection method and when to use each one.
+            </p>
+        </div>
+
+        <!-- Exercise 1: getElementById -->
+        <div class="exercise">
+            <h3>Exercise 1: getElementById() - The Fastest Method</h3>
+
+            <div class="method-card">
+                <h4>Syntax</h4>
+                <div class="syntax">
+const element = document.getElementById("myId");
+                </div>
+                <ul>
+                    <li>Returns: Single element or null</li>
+                    <li>Speed: Fastest (uses internal hash map)</li>
+                    <li>Use case: When you have a unique ID</li>
+                </ul>
+            </div>
+
+            <div class="demo-area">
+                <div id="product-1" class="product-card">
+                    <h4>Laptop</h4>
+                    <p class="price">KES 50,000</p>
+                    <p>High-performance laptop</p>
+                </div>
+            </div>
+
+            <button onclick="selectById()">Select Product by ID</button>
+            <div id="result1" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 2: querySelector -->
+        <div class="exercise">
+            <h3>Exercise 2: querySelector() - Most Flexible</h3>
+
+            <div class="method-card">
+                <h4>Syntax</h4>
+                <div class="syntax">
+const element = document.querySelector(".myClass");
+const element = document.querySelector("#myId");
+const element = document.querySelector("div > p");
+                </div>
+                <ul>
+                    <li>Returns: First matching element or null</li>
+                    <li>Supports: Any CSS selector</li>
+                    <li>Speed: Fast enough for most cases</li>
+                    <li>Warning: Only returns FIRST match</li>
+                </ul>
+            </div>
+
+            <div class="demo-area">
+                <div class="item">Item 1</div>
+                <div class="item">Item 2</div>
+                <div class="item special">Item 3 (special)</div>
+                <div class="item">Item 4</div>
+            </div>
+
+            <button onclick="selectByClass()">Select .item</button>
+            <button onclick="selectByAttribute()">Select [class*="special"]</button>
+            <button onclick="selectComplex()">Select Complex (.item:nth-child(2))</button>
+            <div id="result2" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 3: querySelectorAll -->
+        <div class="exercise">
+            <h3>Exercise 3: querySelectorAll() - Select Multiple</h3>
+
+            <div class="method-card">
+                <h4>Syntax</h4>
+                <div class="syntax">
+const elements = document.querySelectorAll(".item");
+// Returns NodeList (use forEach or convert to array)
+                </div>
+                <ul>
+                    <li>Returns: NodeList (static collection)</li>
+                    <li>Supports: All CSS selectors</li>
+                    <li>Iteration: Use forEach() or for loop</li>
+                </ul>
+            </div>
+
+            <div class="demo-area" id="productArea">
+                <div class="product-card" data-category="electronics">
+                    <h4>Phone</h4>
+                    <p class="price">KES 30,000</p>
+                </div>
+                <div class="product-card" data-category="electronics">
+                    <h4>Tablet</h4>
+                    <p class="price">KES 25,000</p>
+                </div>
+                <div class="product-card" data-category="books">
+                    <h4>JavaScript Book</h4>
+                    <p class="price">KES 2,000</p>
+                </div>
+            </div>
+
+            <button onclick="selectAll()">Select All .product-card</button>
+            <button onclick="selectElectronics()">Select Electronics Only</button>
+            <button onclick="highlightAll()">Highlight All</button>
+            <div id="result3" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 4: getElementsByClassName -->
+        <div class="exercise">
+            <h3>Exercise 4: getElementsByClassName() - Live Collection</h3>
+
+            <div class="method-card">
+                <h4>Syntax</h4>
+                <div class="syntax">
+const elements = document.getElementsByClassName("active");
+                </div>
+                <ul>
+                    <li>Returns: HTMLCollection (LIVE - updates automatically)</li>
+                    <li>Speed: Very fast</li>
+                    <li>Note: Class names are space-separated</li>
+                </ul>
+            </div>
+
+            <div class="demo-area" id="liveDemo">
+                <div class="live-item">Item A</div>
+                <div class="live-item">Item B</div>
+                <div class="live-item">Item C</div>
+            </div>
+
+            <button onclick="demonstrateLive()">Demonstrate Live Collection</button>
+            <div id="result4" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 5: getElementsByTagName -->
+        <div class="exercise">
+            <h3>Exercise 5: getElementsByTagName() - Select by Tag</h3>
+
+            <div class="method-card">
+                <h4>Syntax</h4>
+                <div class="syntax">
+const paragraphs = document.getElementsByTagName("p");
+const allDivs = document.getElementsByTagName("div");
+                </div>
+                <ul>
+                    <li>Returns: HTMLCollection (LIVE)</li>
+                    <li>Speed: Very fast</li>
+                    <li>Use: When selecting by tag only</li>
+                </ul>
+            </div>
+
+            <button onclick="selectByTag()">Select All Paragraphs</button>
+            <button onclick="countElements()">Count All Divs</button>
+            <div id="result5" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 6: Live vs Static Collections -->
+        <div class="exercise">
+            <h3>Exercise 6: Live vs Static Collections - CRITICAL DIFFERENCE</h3>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> Understanding this difference is crucial!
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Returns</th>
+                        <th>Updates Automatically?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>querySelectorAll()</code></td>
+                        <td>NodeList (Static)</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><code>getElementsByClassName()</code></td>
+                        <td>HTMLCollection (Live)</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>getElementsByTagName()</code></td>
+                        <td>HTMLCollection (Live)</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="demo-area" id="liveVsStatic">
+                <div class="test-item">Original 1</div>
+                <div class="test-item">Original 2</div>
+                <div class="test-item">Original 3</div>
+            </div>
+
+            <button onclick="testLiveCollection()">Test Live Collection</button>
+            <button onclick="testStaticCollection()">Test Static Collection</button>
+            <div id="result6" class="result-box"></div>
+        </div>
+
+        <!-- Exercise 7: Best Practices -->
+        <div class="exercise">
+            <h3>Exercise 7: Selection Best Practices</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Method to Use</th>
+                        <th>Why</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Single element by ID</td>
+                        <td><code>getElementById()</code> <span class="badge badge-fast">Fastest</span></td>
+                        <td>Direct hash map lookup</td>
+                    </tr>
+                    <tr>
+                        <td>Single element by selector</td>
+                        <td><code>querySelector()</code> <span class="badge badge-flexible">Flexible</span></td>
+                        <td>Supports any CSS selector</td>
+                    </tr>
+                    <tr>
+                        <td>Multiple elements</td>
+                        <td><code>querySelectorAll()</code> <span class="badge badge-flexible">Recommended</span></td>
+                        <td>Flexible and predictable (static)</td>
+                    </tr>
+                    <tr>
+                        <td>Performance-critical (tags)</td>
+                        <td><code>getElementsByTagName()</code> <span class="badge badge-fast">Fastest</span></td>
+                        <td>Optimized for tag selection</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>💡 Pro Tip:</strong> Use <code>querySelectorAll()</code> by default for
+                multiple elements. It's flexible, predictable (static), and fast enough for 99% of use cases.
+            </div>
+        </div>
+
+        <!-- Exercise 8: Practice Challenge -->
+        <div class="exercise">
+            <h3>Exercise 8: Selection Challenge - Test Your Skills!</h3>
+
+            <div class="demo-area">
+                <div id="container" class="wrapper">
+                    <h4 class="title">Product Store</h4>
+                    <div class="product" data-id="101">Laptop</div>
+                    <div class="product" data-id="102">Mouse</div>
+                    <div class="product featured" data-id="103">Keyboard</div>
+                    <button id="buyBtn" class="btn-primary">Buy Now</button>
+                </div>
+            </div>
+
+            <p><strong>Your Tasks:</strong></p>
+            <button onclick="challenge1()">1. Select container by ID</button>
+            <button onclick="challenge2()">2. Select all .product</button>
+            <button onclick="challenge3()">3. Select featured product</button>
+            <button onclick="challenge4()">4. Select product with data-id="102"</button>
+            <button onclick="challenge5()">5. Select the button</button>
+
+            <div id="challengeResult" class="result-box"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="intro-section" style="background: #fff3cd; border-left-color: #ffc107;">
+            <h2>📝 Module Summary</h2>
+            <p><strong>You've mastered:</strong></p>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="padding: 5px 0;">✓ <code>getElementById()</code> - Fastest, for unique IDs</li>
+                <li style="padding: 5px 0;">✓ <code>querySelector()</code> - Most flexible, first match</li>
+                <li style="padding: 5px 0;">✓ <code>querySelectorAll()</code> - Multiple elements, static</li>
+                <li style="padding: 5px 0;">✓ <code>getElementsByClassName()</code> - Live collection</li>
+                <li style="padding: 5px 0;">✓ <code>getElementsByTagName()</code> - Live collection by tag</li>
+                <li style="padding: 5px 0;">✓ Live vs Static collections</li>
+            </ul>
+            <p style="margin-top: 15px;">
+                <strong>Next:</strong> Module 3 - Learn how to MANIPULATE selected elements!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Exercise 1: getElementById
+        function selectById() {
+            const element = document.getElementById('product-1');
+            const result = document.getElementById('result1');
+
+            element.style.border = '3px solid #4caf50';
+
+            result.innerHTML = `
+                <strong>✓ Selected element by ID:</strong><br>
+                ID: ${element.id}<br>
+                Tag: ${element.tagName}<br>
+                Content: ${element.querySelector('h4').textContent}
+            `;
+            result.classList.add('show');
+
+            setTimeout(() => {
+                element.style.border = '';
+            }, 2000);
+        }
+
+        // Exercise 2: querySelector
+        function selectByClass() {
+            const element = document.querySelector('.item');
+            const result = document.getElementById('result2');
+
+            // Reset all
+            document.querySelectorAll('.item').forEach(el => {
+                el.classList.remove('highlight');
+            });
+
+            element.classList.add('highlight');
+
+            result.innerHTML = `
+                <strong>✓ Selected with querySelector('.item'):</strong><br>
+                Note: Only FIRST match selected<br>
+                Content: ${element.textContent}
+            `;
+            result.classList.add('show');
+        }
+
+        function selectByAttribute() {
+            const element = document.querySelector('[class*="special"]');
+            const result = document.getElementById('result2');
+
+            document.querySelectorAll('.item').forEach(el => {
+                el.classList.remove('highlight');
+            });
+
+            element.classList.add('highlight');
+
+            result.innerHTML = `
+                <strong>✓ Selected with attribute selector:</strong><br>
+                Selector: [class*="special"]<br>
+                Content: ${element.textContent}
+            `;
+            result.classList.add('show');
+        }
+
+        function selectComplex() {
+            const element = document.querySelector('.item:nth-child(2)');
+            const result = document.getElementById('result2');
+
+            document.querySelectorAll('.item').forEach(el => {
+                el.classList.remove('highlight');
+            });
+
+            element.classList.add('highlight');
+
+            result.innerHTML = `
+                <strong>✓ Selected with complex selector:</strong><br>
+                Selector: .item:nth-child(2)<br>
+                Content: ${element.textContent}
+            `;
+            result.classList.add('show');
+        }
+
+        // Exercise 3: querySelectorAll
+        function selectAll() {
+            const elements = document.querySelectorAll('.product-card');
+            const result = document.getElementById('result3');
+
+            result.innerHTML = `
+                <strong>✓ Selected ${elements.length} elements</strong><br>
+                Type: NodeList (static)<br>
+                Can iterate with: forEach(), for loop<br>
+                Elements: ${Array.from(elements).map(el => el.querySelector('h4').textContent).join(', ')}
+            `;
+            result.classList.add('show');
+        }
+
+        function selectElectronics() {
+            const elements = document.querySelectorAll('[data-category="electronics"]');
+            const result = document.getElementById('result3');
+
+            result.innerHTML = `
+                <strong>✓ Selected electronics only</strong><br>
+                Selector: [data-category="electronics"]<br>
+                Count: ${elements.length}<br>
+                Products: ${Array.from(elements).map(el => el.querySelector('h4').textContent).join(', ')}
+            `;
+            result.classList.add('show');
+        }
+
+        function highlightAll() {
+            const elements = document.querySelectorAll('.product-card');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('selected');
+                }, index * 200);
+            });
+
+            setTimeout(() => {
+                elements.forEach(el => el.classList.remove('selected'));
+            }, 2000);
+        }
+
+        // Exercise 4: Live Collection
+        function demonstrateLive() {
+            const liveCollection = document.getElementsByClassName('live-item');
+            const result = document.getElementById('result4');
+
+            result.innerHTML = `<strong>Initial count:</strong> ${liveCollection.length}<br>`;
+
+            setTimeout(() => {
+                const newItem = document.createElement('div');
+                newItem.className = 'live-item';
+                newItem.textContent = 'Item D (added dynamically)';
+                document.getElementById('liveDemo').appendChild(newItem);
+
+                result.innerHTML += `<strong>After adding element:</strong> ${liveCollection.length}<br>`;
+                result.innerHTML += `<strong>Collection updated automatically! ✓</strong>`;
+            }, 1000);
+
+            result.classList.add('show');
+        }
+
+        // Exercise 5: Tag Selection
+        function selectByTag() {
+            const paragraphs = document.getElementsByTagName('p');
+            const result = document.getElementById('result5');
+
+            result.innerHTML = `
+                <strong>✓ Selected all &lt;p&gt; tags</strong><br>
+                Total paragraphs: ${paragraphs.length}<br>
+                Type: HTMLCollection (live)
+            `;
+            result.classList.add('show');
+        }
+
+        function countElements() {
+            const divs = document.getElementsByTagName('div');
+            const result = document.getElementById('result5');
+
+            result.innerHTML = `
+                <strong>✓ All div elements</strong><br>
+                Total divs: ${divs.length}<br>
+                This includes ALL divs on the entire page!
+            `;
+            result.classList.add('show');
+        }
+
+        // Exercise 6: Live vs Static
+        function testLiveCollection() {
+            const container = document.getElementById('liveVsStatic');
+            const liveCollection = container.getElementsByClassName('test-item');
+            const result = document.getElementById('result6');
+
+            result.innerHTML = `<strong>LIVE Collection Test:</strong><br>`;
+            result.innerHTML += `Initial count: ${liveCollection.length}<br>`;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'test-item';
+            newItem.textContent = 'Added Item';
+            container.appendChild(newItem);
+
+            result.innerHTML += `After adding: ${liveCollection.length}<br>`;
+            result.innerHTML += `<strong>✓ Collection updated automatically!</strong>`;
+            result.classList.add('show');
+        }
+
+        function testStaticCollection() {
+            const container = document.getElementById('liveVsStatic');
+            const staticCollection = container.querySelectorAll('.test-item');
+            const result = document.getElementById('result6');
+
+            result.innerHTML = `<strong>STATIC Collection Test:</strong><br>`;
+            result.innerHTML += `Initial count: ${staticCollection.length}<br>`;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'test-item';
+            newItem.textContent = 'Added Item';
+            container.appendChild(newItem);
+
+            const newStatic = container.querySelectorAll('.test-item');
+
+            result.innerHTML += `After adding (old): ${staticCollection.length}<br>`;
+            result.innerHTML += `After adding (new query): ${newStatic.length}<br>`;
+            result.innerHTML += `<strong>✗ Old collection NOT updated (static)</strong>`;
+            result.classList.add('show');
+        }
+
+        // Exercise 8: Challenges
+        function challenge1() {
+            const element = document.getElementById('container');
+            showChallengeResult('container by ID', element.id, element.className);
+        }
+
+        function challenge2() {
+            const elements = document.querySelectorAll('.product');
+            showChallengeResult('all .product', `${elements.length} elements`,
+                Array.from(elements).map(el => el.textContent).join(', '));
+        }
+
+        function challenge3() {
+            const element = document.querySelector('.product.featured');
+            showChallengeResult('featured product', element.textContent, element.dataset.id);
+        }
+
+        function challenge4() {
+            const element = document.querySelector('[data-id="102"]');
+            showChallengeResult('product with data-id="102"', element.textContent, element.dataset.id);
+        }
+
+        function challenge5() {
+            const element = document.getElementById('buyBtn');
+            showChallengeResult('button', element.textContent, element.className);
+        }
+
+        function showChallengeResult(what, info1, info2) {
+            const result = document.getElementById('challengeResult');
+            result.innerHTML = `
+                <strong>✓ Successfully selected: ${what}</strong><br>
+                ${info1}<br>
+                ${info2}
+            `;
+            result.classList.add('show');
+        }
+    </script>
+</body>
+</html>

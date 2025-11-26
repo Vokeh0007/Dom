@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 5: DOM Traversal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #00b4db;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #00b4db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #00b4db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #0083b0;
+            transform: translateY(-2px);
+        }
+
+        .tree-container {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .tree-node {
+            background: #e9ecef;
+            border: 2px solid #adb5bd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .tree-node.parent {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .tree-node.child {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            margin-left: 30px;
+        }
+
+        .tree-node.sibling {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .tree-node.target {
+            background: #f8d7da;
+            border-color: #dc3545;
+            font-weight: bold;
+        }
+
+        .tree-node.highlight {
+            background: #ffeb3b;
+            border-color: #fdd835;
+            font-weight: bold;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-card h4 {
+            color: #00b4db;
+            margin-bottom: 10px;
+        }
+
+        .product-card button {
+            background: #6c757d;
+            font-size: 12px;
+            padding: 8px 15px;
+        }
+
+        .product-card button:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 5: DOM Traversal</h1>
+        <p class="subtitle">Master parent, children, siblings, and tree navigation</p>
+
+        <!-- Exercise 1: Parent Navigation -->
+        <div class="exercise">
+            <h3>Exercise 1: Navigating to Parents</h3>
+            <p>Use <code>parentElement</code> and <code>closest()</code></p>
+            <button onclick="findParent()">Find Direct Parent</button>
+            <button onclick="findGrandparent()">Find Grandparent</button>
+            <button onclick="findClosestDiv()">Find Closest Div Ancestor</button>
+            <button onclick="resetHighlights()">Reset</button>
+
+            <div id="parent1" class="tree-container">
+                <div class="tree-node parent">
+                    Grandparent Div
+                    <div class="tree-node child">
+                        Parent Div
+                        <button id="targetBtn1" class="tree-node target">Target Button</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="info1" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 2: Children Navigation -->
+        <div class="exercise">
+            <h3>Exercise 2: Navigating to Children</h3>
+            <p>Use <code>children</code>, <code>firstElementChild</code>, <code>lastElementChild</code></p>
+            <button onclick="highlightFirstChild()">Highlight First Child</button>
+            <button onclick="highlightLastChild()">Highlight Last Child</button>
+            <button onclick="getAllChildren()">Get All Children Info</button>
+            <button onclick="resetHighlights()">Reset</button>
+
+            <div id="parent2" class="tree-container">
+                <div class="tree-node child">Child 1</div>
+                <div class="tree-node child">Child 2</div>
+                <div class="tree-node child">Child 3</div>
+                <div class="tree-node child">Child 4</div>
+            </div>
+
+            <div id="info2" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 3: Sibling Navigation -->
+        <div class="exercise">
+            <h3>Exercise 3: Navigating Siblings</h3>
+            <p>Use <code>nextElementSibling</code> and <code>previousElementSibling</code></p>
+            <button onclick="highlightNextSibling()">Highlight Next Sibling</button>
+            <button onclick="highlightPrevSibling()">Highlight Previous Sibling</button>
+            <button onclick="getAllSiblings()">Get All Siblings</button>
+            <button onclick="resetHighlights()">Reset</button>
+
+            <div id="parent3" class="tree-container">
+                <div class="tree-node sibling">Sibling 1</div>
+                <div class="tree-node sibling">Sibling 2</div>
+                <div id="middleChild" class="tree-node target">Target (Sibling 3)</div>
+                <div class="tree-node sibling">Sibling 4</div>
+                <div class="tree-node sibling">Sibling 5</div>
+            </div>
+
+            <div id="info3" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 4: matches() Method -->
+        <div class="exercise">
+            <h3>Exercise 4: Checking Element Matches</h3>
+            <p>Use <code>matches()</code> to check if element matches a selector</p>
+            <button onclick="checkMatches('.product-card')">Check if .product-card</button>
+            <button onclick="checkMatches('div')">Check if div</button>
+            <button onclick="checkMatches('[data-id]')">Check if has data-id</button>
+            <button onclick="checkMatches('.active')">Check if .active</button>
+
+            <div id="testElement" class="product-card" data-id="123">
+                <h4>Test Product</h4>
+                <p>This element can be tested with different selectors</p>
+            </div>
+
+            <div id="info4" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 5: contains() Method -->
+        <div class="exercise">
+            <h3>Exercise 5: Checking Element Containment</h3>
+            <p>Use <code>contains()</code> to check if element contains another</p>
+            <button onclick="checkContainment()">Check Containment</button>
+
+            <div id="outerContainer" class="tree-container">
+                <div class="tree-node parent">
+                    Outer Container
+                    <div class="tree-node child">
+                        Middle Container
+                        <div id="innerElement" class="tree-node target">Inner Element</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="info5" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 6: Real-World Product Card -->
+        <div class="exercise">
+            <h3>Exercise 6: Product Card Navigation Challenge</h3>
+            <p>Click any button and navigate through the DOM tree</p>
+
+            <div class="product-card" data-id="1">
+                <h4>Laptop</h4>
+                <p class="price">KES 50,000</p>
+                <p class="description">High-performance laptop</p>
+                <button class="view-details">View Details</button>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card" data-id="2">
+                <h4>Phone</h4>
+                <p class="price">KES 30,000</p>
+                <p class="description">Latest smartphone</p>
+                <button class="view-details">View Details</button>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div id="info6" class="info-box" style="display: none;"></div>
+        </div>
+
+        <!-- Exercise 7: Tree Walking Challenge -->
+        <div class="exercise">
+            <h3>Exercise 7: Advanced Tree Walking</h3>
+            <p>Navigate complex nested structures</p>
+            <button onclick="walkTree()">Walk Entire Tree</button>
+            <button onclick="findAllButtons()">Find All Buttons</button>
+            <button onclick="resetHighlights()">Reset</button>
+
+            <div id="complexTree" class="tree-container">
+                <div class="tree-node parent">
+                    Level 1
+                    <div class="tree-node child">
+                        Level 2a
+                        <div class="tree-node">
+                            Level 3a
+                            <button>Button 1</button>
+                        </div>
+                    </div>
+                    <div class="tree-node child">
+                        Level 2b
+                        <div class="tree-node">
+                            Level 3b
+                            <button>Button 2</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="info7" class="info-box" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to reset all highlights
+        function resetHighlights() {
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+            document.querySelectorAll('.info-box').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        // Exercise 1: Parent Navigation
+        function findParent() {
+            resetHighlights();
+            const btn = document.getElementById('targetBtn1');
+            const parent = btn.parentElement;
+
+            parent.classList.add('highlight');
+
+            const info = document.getElementById('info1');
+            info.innerHTML = `
+                <strong>Direct Parent Found:</strong><br>
+                Tag: ${parent.tagName}<br>
+                Class: ${parent.className}
+            `;
+            info.style.display = 'block';
+        }
+
+        function findGrandparent() {
+            resetHighlights();
+            const btn = document.getElementById('targetBtn1');
+            const grandparent = btn.parentElement.parentElement;
+
+            grandparent.classList.add('highlight');
+
+            const info = document.getElementById('info1');
+            info.innerHTML = `
+                <strong>Grandparent Found:</strong><br>
+                Tag: ${grandparent.tagName}<br>
+                Text: ${grandparent.firstChild.textContent.trim()}
+            `;
+            info.style.display = 'block';
+        }
+
+        function findClosestDiv() {
+            resetHighlights();
+            const btn = document.getElementById('targetBtn1');
+            const closestDiv = btn.closest('.tree-node.parent');
+
+            closestDiv.classList.add('highlight');
+
+            const info = document.getElementById('info1');
+            info.innerHTML = `
+                <strong>Closest .tree-node.parent Found:</strong><br>
+                This is robust - works regardless of nesting depth!<br>
+                Text: ${closestDiv.firstChild.textContent.trim()}
+            `;
+            info.style.display = 'block';
+        }
+
+        // Exercise 2: Children Navigation
+        function highlightFirstChild() {
+            resetHighlights();
+            const parent = document.getElementById('parent2');
+            const firstChild = parent.firstElementChild;
+
+            firstChild.classList.add('highlight');
+
+            const info = document.getElementById('info2');
+            info.innerHTML = `
+                <strong>First Child:</strong><br>
+                Text: ${firstChild.textContent}
+            `;
+            info.style.display = 'block';
+        }
+
+        function highlightLastChild() {
+            resetHighlights();
+            const parent = document.getElementById('parent2');
+            const lastChild = parent.lastElementChild;
+
+            lastChild.classList.add('highlight');
+
+            const info = document.getElementById('info2');
+            info.innerHTML = `
+                <strong>Last Child:</strong><br>
+                Text: ${lastChild.textContent}
+            `;
+            info.style.display = 'block';
+        }
+
+        function getAllChildren() {
+            resetHighlights();
+            const parent = document.getElementById('parent2');
+            const children = parent.children;
+
+            Array.from(children).forEach(child => {
+                child.classList.add('highlight');
+            });
+
+            const info = document.getElementById('info2');
+            info.innerHTML = `
+                <strong>All Children:</strong><br>
+                Total count: ${children.length}<br>
+                Children: ${Array.from(children).map(c => c.textContent).join(', ')}
+            `;
+            info.style.display = 'block';
+        }
+
+        // Exercise 3: Sibling Navigation
+        function highlightNextSibling() {
+            resetHighlights();
+            const target = document.getElementById('middleChild');
+            const next = target.nextElementSibling;
+
+            if (next) {
+                next.classList.add('highlight');
+
+                const info = document.getElementById('info3');
+                info.innerHTML = `
+                    <strong>Next Sibling:</strong><br>
+                    Text: ${next.textContent}
+                `;
+                info.style.display = 'block';
+            }
+        }
+
+        function highlightPrevSibling() {
+            resetHighlights();
+            const target = document.getElementById('middleChild');
+            const prev = target.previousElementSibling;
+
+            if (prev) {
+                prev.classList.add('highlight');
+
+                const info = document.getElementById('info3');
+                info.innerHTML = `
+                    <strong>Previous Sibling:</strong><br>
+                    Text: ${prev.textContent}
+                `;
+                info.style.display = 'block';
+            }
+        }
+
+        function getAllSiblings() {
+            resetHighlights();
+            const target = document.getElementById('middleChild');
+            const siblings = Array.from(target.parentElement.children)
+                .filter(child => child !== target);
+
+            siblings.forEach(sibling => {
+                sibling.classList.add('highlight');
+            });
+
+            const info = document.getElementById('info3');
+            info.innerHTML = `
+                <strong>All Siblings (excluding target):</strong><br>
+                Total: ${siblings.length}<br>
+                Siblings: ${siblings.map(s => s.textContent).join(', ')}
+            `;
+            info.style.display = 'block';
+        }
+
+        // Exercise 4: matches()
+        function checkMatches(selector) {
+            const element = document.getElementById('testElement');
+            const matches = element.matches(selector);
+
+            const info = document.getElementById('info4');
+            info.innerHTML = `
+                <strong>Checking: <code>${selector}</code></strong><br>
+                Result: ${matches ? '✓ MATCHES' : '✗ DOES NOT MATCH'}
+            `;
+            info.style.display = 'block';
+        }
+
+        // Exercise 5: contains()
+        function checkContainment() {
+            const outer = document.getElementById('outerContainer');
+            const inner = document.getElementById('innerElement');
+
+            const contains = outer.contains(inner);
+
+            const info = document.getElementById('info5');
+            info.innerHTML = `
+                <strong>Containment Check:</strong><br>
+                Does outer container contain inner element? ${contains ? '✓ YES' : '✗ NO'}
+            `;
+            info.style.display = 'block';
+        }
+
+        // Exercise 6: Product Card Navigation
+        document.querySelectorAll('.view-details, .add-to-cart').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.product-card');
+                const title = card.querySelector('h4').textContent;
+                const price = card.querySelector('.price').textContent;
+                const description = card.querySelector('.description').textContent;
+                const productId = card.dataset.id;
+
+                const info = document.getElementById('info6');
+                info.innerHTML = `
+                    <strong>Product Details (via DOM Traversal):</strong><br>
+                    ID: ${productId}<br>
+                    Product: ${title}<br>
+                    Price: ${price}<br>
+                    Description: ${description}<br>
+                    Action: ${e.target.textContent}
+                `;
+                info.style.display = 'block';
+            });
+        });
+
+        // Exercise 7: Tree Walking
+        function walkTree() {
+            resetHighlights();
+            const tree = document.getElementById('complexTree');
+            const allElements = tree.querySelectorAll('*');
+
+            let count = 0;
+            allElements.forEach(el => {
+                setTimeout(() => {
+                    el.classList.add('highlight');
+                }, count * 200);
+                count++;
+            });
+
+            const info = document.getElementById('info7');
+            info.innerHTML = `
+                <strong>Walking Tree:</strong><br>
+                Total elements in tree: ${allElements.length}<br>
+                Highlighting each element with 200ms delay
+            `;
+            info.style.display = 'block';
+        }
+
+        function findAllButtons() {
+            resetHighlights();
+            const tree = document.getElementById('complexTree');
+            const buttons = tree.querySelectorAll('button');
+
+            buttons.forEach(btn => {
+                btn.classList.add('highlight');
+            });
+
+            const info = document.getElementById('info7');
+            info.innerHTML = `
+                <strong>All Buttons Found:</strong><br>
+                Total: ${buttons.length}<br>
+                Buttons: ${Array.from(buttons).map(b => b.textContent).join(', ')}
+            `;
+            info.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

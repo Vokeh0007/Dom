@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 4: Creating & Removing Elements</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #f5576c;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #e04455;
+            transform: translateY(-2px);
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .demo-area {
+            background: white;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            min-height: 100px;
+        }
+
+        ul, ol {
+            list-style-position: inside;
+            margin: 10px 0;
+        }
+
+        li {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 4: Creating & Removing Elements</h1>
+        <p class="subtitle">Master createElement, appendChild, prepend, insertBefore, and remove</p>
+
+        <!-- Exercise 1: createElement Basics -->
+        <div class="exercise">
+            <h3>Exercise 1: Creating Elements</h3>
+            <p>Create new elements dynamically with <code>createElement()</code></p>
+            <button onclick="createParagraph()">Create Paragraph</button>
+            <button onclick="createButton()">Create Button</button>
+            <button onclick="createCard()">Create Card</button>
+            <div id="demo1" class="demo-area"></div>
+        </div>
+
+        <!-- Exercise 2: appendChild vs prepend -->
+        <div class="exercise">
+            <h3>Exercise 2: appendChild() vs prepend()</h3>
+            <p>Add elements to the end or beginning</p>
+            <input type="text" id="itemInput" placeholder="Enter item text">
+            <button onclick="addToEnd()">Add to End (appendChild)</button>
+            <button onclick="addToStart()">Add to Start (prepend)</button>
+            <button onclick="clearList()">Clear List</button>
+            <ul id="itemList"></ul>
+        </div>
+
+        <!-- Exercise 3: insertBefore & insertAdjacentElement -->
+        <div class="exercise">
+            <h3>Exercise 3: Precise Insertion</h3>
+            <p>Insert elements at specific positions</p>
+            <button onclick="insertBefore()">Insert Before Item 2</button>
+            <button onclick="insertAfter()">Insert After Item 2</button>
+            <button onclick="insertBegin()">Insert at Beginning</button>
+            <button onclick="insertEnd()">Insert at End</button>
+            <button onclick="resetInsertDemo()">Reset</button>
+            <div id="insertDemo" class="demo-area">
+                <div class="card">Item 1</div>
+                <div class="card" id="targetItem">Item 2 (Target)</div>
+                <div class="card">Item 3</div>
+            </div>
+        </div>
+
+        <!-- Exercise 4: Removing Elements -->
+        <div class="exercise">
+            <h3>Exercise 4: Removing Elements</h3>
+            <p>Remove elements using <code>remove()</code> and <code>removeChild()</code></p>
+            <button onclick="addTask()">Add Task</button>
+            <button onclick="removeFirst()">Remove First</button>
+            <button onclick="removeLast()">Remove Last</button>
+            <button onclick="removeAll()">Remove All</button>
+            <ul id="taskList">
+                <li>
+                    <span class="item-content">Task 1</span>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </li>
+                <li>
+                    <span class="item-content">Task 2</span>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </li>
+                <li>
+                    <span class="item-content">Task 3</span>
+                    <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Exercise 5: cloneNode -->
+        <div class="exercise">
+            <h3>Exercise 5: Cloning Elements</h3>
+            <p>Clone elements with <code>cloneNode()</code></p>
+            <div id="template" class="card">
+                <h4>Template Card</h4>
+                <p>This is a template that can be cloned</p>
+                <button class="secondary">Action</button>
+            </div>
+            <button onclick="shallowClone()">Shallow Clone (no children)</button>
+            <button onclick="deepClone()">Deep Clone (with children)</button>
+            <button onclick="clearClones()">Clear Clones</button>
+            <div id="cloneArea" class="demo-area"></div>
+        </div>
+
+        <!-- Exercise 6: Document Fragment (Performance) -->
+        <div class="exercise">
+            <h3>Exercise 6: Document Fragment (Performance Optimization)</h3>
+            <p>Use DocumentFragment to batch DOM updates</p>
+            <button onclick="inefficientAdd()">Inefficient (1000 items one by one)</button>
+            <button onclick="efficientAdd()">Efficient (1000 items with fragment)</button>
+            <button onclick="clearPerformanceList()">Clear</button>
+            <div id="performanceInfo" style="margin: 10px 0; color: #666;"></div>
+            <div id="performanceList" class="demo-area" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+
+        <!-- Exercise 7: Dynamic Todo List Challenge -->
+        <div class="exercise">
+            <h3>Exercise 7: Complete Todo List Challenge</h3>
+            <p>Build a fully functional todo list</p>
+            <input type="text" id="todoInput" placeholder="Enter todo item">
+            <button onclick="addTodo()">Add Todo</button>
+            <ul id="todoList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let taskCounter = 4;
+
+        // Exercise 1: createElement
+        function createParagraph() {
+            const demo = document.getElementById('demo1');
+            const p = document.createElement('p');
+            p.textContent = 'This is a dynamically created paragraph!';
+            p.style.color = '#f5576c';
+            p.style.padding = '10px';
+            demo.appendChild(p);
+        }
+
+        function createButton() {
+            const demo = document.getElementById('demo1');
+            const btn = document.createElement('button');
+            btn.textContent = 'I am a dynamic button';
+            btn.className = 'secondary';
+            btn.onclick = () => alert('Dynamic button clicked!');
+            demo.appendChild(btn);
+        }
+
+        function createCard() {
+            const demo = document.getElementById('demo1');
+
+            // Create card container
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            // Create heading
+            const heading = document.createElement('h4');
+            heading.textContent = 'Dynamic Card';
+
+            // Create paragraph
+            const para = document.createElement('p');
+            para.textContent = 'This card was created entirely with JavaScript!';
+
+            // Create button
+            const btn = document.createElement('button');
+            btn.textContent = 'Remove Card';
+            btn.className = 'delete-btn';
+            btn.onclick = () => card.remove();
+
+            // Assemble the card
+            card.appendChild(heading);
+            card.appendChild(para);
+            card.appendChild(btn);
+
+            // Add to page
+            demo.appendChild(card);
+        }
+
+        // Exercise 2: appendChild vs prepend
+        function addToEnd() {
+            const input = document.getElementById('itemInput');
+            const list = document.getElementById('itemList');
+
+            if (!input.value.trim()) return;
+
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-content">${input.value}</span>
+                <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+            `;
+
+            list.appendChild(li); // Adds to END
+            input.value = '';
+        }
+
+        function addToStart() {
+            const input = document.getElementById('itemInput');
+            const list = document.getElementById('itemList');
+
+            if (!input.value.trim()) return;
+
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-content">${input.value}</span>
+                <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+            `;
+
+            list.prepend(li); // Adds to START
+            input.value = '';
+        }
+
+        function clearList() {
+            document.getElementById('itemList').innerHTML = '';
+        }
+
+        // Exercise 3: insertBefore & insertAdjacentElement
+        function insertBefore() {
+            const target = document.getElementById('targetItem');
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.textContent = 'Inserted BEFORE Item 2';
+            newCard.style.background = '#d4edda';
+
+            target.parentElement.insertBefore(newCard, target);
+        }
+
+        function insertAfter() {
+            const target = document.getElementById('targetItem');
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.textContent = 'Inserted AFTER Item 2';
+            newCard.style.background = '#fff3cd';
+
+            target.insertAdjacentElement('afterend', newCard);
+        }
+
+        function insertBegin() {
+            const container = document.getElementById('insertDemo');
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.textContent = 'Inserted at BEGINNING';
+            newCard.style.background = '#cfe2ff';
+
+            container.insertAdjacentElement('afterbegin', newCard);
+        }
+
+        function insertEnd() {
+            const container = document.getElementById('insertDemo');
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.textContent = 'Inserted at END';
+            newCard.style.background = '#f8d7da';
+
+            container.insertAdjacentElement('beforeend', newCard);
+        }
+
+        function resetInsertDemo() {
+            document.getElementById('insertDemo').innerHTML = `
+                <div class="card">Item 1</div>
+                <div class="card" id="targetItem">Item 2 (Target)</div>
+                <div class="card">Item 3</div>
+            `;
+        }
+
+        // Exercise 4: Removing Elements
+        function addTask() {
+            const list = document.getElementById('taskList');
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-content">Task ${taskCounter}</span>
+                <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+            `;
+            list.appendChild(li);
+            taskCounter++;
+        }
+
+        function removeFirst() {
+            const list = document.getElementById('taskList');
+            if (list.firstElementChild) {
+                list.firstElementChild.remove();
+            }
+        }
+
+        function removeLast() {
+            const list = document.getElementById('taskList');
+            if (list.lastElementChild) {
+                list.lastElementChild.remove();
+            }
+        }
+
+        function removeAll() {
+            document.getElementById('taskList').innerHTML = '';
+        }
+
+        // Exercise 5: cloneNode
+        function shallowClone() {
+            const template = document.getElementById('template');
+            const clone = template.cloneNode(false); // No children
+            clone.style.background = '#fff3cd';
+            document.getElementById('cloneArea').appendChild(clone);
+        }
+
+        function deepClone() {
+            const template = document.getElementById('template');
+            const clone = template.cloneNode(true); // With children
+            clone.style.background = '#d4edda';
+            document.getElementById('cloneArea').appendChild(clone);
+        }
+
+        function clearClones() {
+            document.getElementById('cloneArea').innerHTML = '';
+        }
+
+        // Exercise 6: Document Fragment
+        function inefficientAdd() {
+            const start = performance.now();
+            const container = document.getElementById('performanceList');
+            container.innerHTML = '';
+
+            // BAD: Causes 1000 reflows
+            for (let i = 1; i <= 1000; i++) {
+                const div = document.createElement('div');
+                div.textContent = `Item ${i}`;
+                div.style.padding = '5px';
+                div.style.borderBottom = '1px solid #eee';
+                container.appendChild(div); // Reflow each time!
+            }
+
+            const end = performance.now();
+            document.getElementById('performanceInfo').innerHTML =
+                `<strong>Inefficient method took: ${(end - start).toFixed(2)}ms</strong>`;
+        }
+
+        function efficientAdd() {
+            const start = performance.now();
+            const container = document.getElementById('performanceList');
+            container.innerHTML = '';
+
+            // GOOD: Single reflow
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 1; i <= 1000; i++) {
+                const div = document.createElement('div');
+                div.textContent = `Item ${i}`;
+                div.style.padding = '5px';
+                div.style.borderBottom = '1px solid #eee';
+                fragment.appendChild(div);
+            }
+
+            container.appendChild(fragment); // Single reflow!
+
+            const end = performance.now();
+            document.getElementById('performanceInfo').innerHTML =
+                `<strong>Efficient method took: ${(end - start).toFixed(2)}ms</strong>`;
+        }
+
+        function clearPerformanceList() {
+            document.getElementById('performanceList').innerHTML = '';
+            document.getElementById('performanceInfo').innerHTML = '';
+        }
+
+        // Exercise 7: Complete Todo List
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const list = document.getElementById('todoList');
+
+            if (!input.value.trim()) {
+                alert('Please enter a todo item');
+                return;
+            }
+
+            const li = document.createElement('li');
+
+            const span = document.createElement('span');
+            span.className = 'item-content';
+            span.textContent = input.value;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '✕';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = () => li.remove();
+
+            li.appendChild(span);
+            li.appendChild(deleteBtn);
+            list.appendChild(li);
+
+            input.value = '';
+        }
+
+        // Allow Enter key to add todo
+        document.getElementById('todoInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 3: DOM Manipulation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .exercise-content {
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .demo-box {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+            min-height: 60px;
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 5px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            border: 2px solid red;
+            padding: 10px;
+        }
+
+        .success {
+            color: green;
+            border: 2px solid green;
+            padding: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 5px;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Module 3: DOM Manipulation</h1>
+        <p class="subtitle">Master textContent, innerHTML, style, classList, and attributes</p>
+
+        <!-- Exercise 1: textContent vs innerHTML -->
+        <div class="exercise">
+            <h3>Exercise 1: textContent vs innerHTML</h3>
+            <div class="exercise-content">
+                <p>Learn the difference between textContent and innerHTML</p>
+                <div id="demo1" class="demo-box">Original Content</div>
+                <button onclick="useTextContent()">Use textContent</button>
+                <button onclick="useInnerHTML()">Use innerHTML</button>
+                <button onclick="resetDemo1()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Exercise 2: Style Manipulation -->
+        <div class="exercise">
+            <h3>Exercise 2: Direct Style Manipulation</h3>
+            <div class="exercise-content">
+                <p>Change styles directly using the style property</p>
+                <div id="demo2" class="demo-box">Style me!</div>
+                <button onclick="changeColor()">Change Color</button>
+                <button onclick="changeSize()">Change Size</button>
+                <button onclick="changeBorder()">Add Border</button>
+                <button onclick="resetDemo2()">Reset Styles</button>
+            </div>
+        </div>
+
+        <!-- Exercise 3: classList Manipulation -->
+        <div class="exercise">
+            <h3>Exercise 3: classList (Recommended Approach)</h3>
+            <div class="exercise-content">
+                <p>Use classList to manage CSS classes</p>
+                <div id="demo3" class="demo-box">Toggle my classes!</div>
+                <button onclick="addClass()">Add Highlight</button>
+                <button onclick="removeClass()">Remove Highlight</button>
+                <button onclick="toggleClass()">Toggle Highlight</button>
+                <button onclick="checkClass()">Check if Has Class</button>
+                <div id="classStatus" class="status hidden"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 4: Attribute Manipulation -->
+        <div class="exercise">
+            <h3>Exercise 4: Working with Attributes</h3>
+            <div class="exercise-content">
+                <p>Set, get, and remove attributes</p>
+                <div id="demo4" class="demo-box" data-status="pending">
+                    Check my attributes in DevTools!
+                </div>
+                <button onclick="setAttribute()">Set data-status="active"</button>
+                <button onclick="getAttribute()">Get Attribute Value</button>
+                <button onclick="removeAttribute()">Remove Attribute</button>
+                <button onclick="checkAttribute()">Check if Has Attribute</button>
+                <div id="attrStatus" class="status hidden"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 5: Dataset API -->
+        <div class="exercise">
+            <h3>Exercise 5: Dataset API (data-* attributes)</h3>
+            <div class="exercise-content">
+                <p>Use the dataset API for data-* attributes</p>
+                <div id="demo5" class="demo-box" data-user-id="123" data-user-name="John Doe">
+                    User Info Container
+                </div>
+                <button onclick="readDataset()">Read Dataset</button>
+                <button onclick="updateDataset()">Update User ID</button>
+                <button onclick="addDataset()">Add New Data Attribute</button>
+                <div id="datasetStatus" class="status hidden"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 6: Practical Challenge -->
+        <div class="exercise">
+            <h3>Exercise 6: Card Editor Challenge</h3>
+            <div class="exercise-content">
+                <p>Build a card editor that updates in real-time</p>
+                <div id="liveCard" class="demo-box">
+                    <h2 id="cardTitle">Card Title</h2>
+                    <p id="cardDesc">Card Description</p>
+                </div>
+                <input type="text" id="titleInput" placeholder="Enter new title">
+                <textarea id="descInput" placeholder="Enter new description" rows="3"></textarea>
+                <br>
+                <button onclick="updateCard()">Update Card</button>
+                <button onclick="makeCardError()">Make Error Style</button>
+                <button onclick="makeCardSuccess()">Make Success Style</button>
+                <button onclick="resetCard()">Reset Card</button>
+            </div>
+        </div>
+
+        <!-- Exercise 7: XSS Security Demo -->
+        <div class="exercise">
+            <h3>Exercise 7: Security - Preventing XSS</h3>
+            <div class="exercise-content">
+                <p>Learn why textContent is safer than innerHTML for user input</p>
+                <input type="text" id="userInput" placeholder="Try typing: <img src=x onerror='alert(1)'>">
+                <br>
+                <button onclick="unsafeInsert()">Unsafe Insert (innerHTML)</button>
+                <button onclick="safeInsert()">Safe Insert (textContent)</button>
+                <div id="xssDemo" class="demo-box"></div>
+                <div id="xssStatus" class="status hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exercise 1: textContent vs innerHTML
+        function useTextContent() {
+            const demo = document.getElementById('demo1');
+            demo.textContent = '<strong>This is BOLD text</strong>';
+            // textContent treats everything as plain text - HTML tags are NOT parsed
+        }
+
+        function useInnerHTML() {
+            const demo = document.getElementById('demo1');
+            demo.innerHTML = '<strong>This is BOLD text</strong>';
+            // innerHTML parses HTML - the text will actually be bold
+        }
+
+        function resetDemo1() {
+            document.getElementById('demo1').textContent = 'Original Content';
+        }
+
+        // Exercise 2: Style Manipulation
+        function changeColor() {
+            const demo = document.getElementById('demo2');
+            demo.style.color = 'white';
+            demo.style.backgroundColor = '#667eea';
+        }
+
+        function changeSize() {
+            const demo = document.getElementById('demo2');
+            demo.style.fontSize = '24px';
+            demo.style.fontWeight = 'bold';
+        }
+
+        function changeBorder() {
+            const demo = document.getElementById('demo2');
+            demo.style.border = '3px solid #764ba2';
+            demo.style.borderRadius = '15px';
+        }
+
+        function resetDemo2() {
+            const demo = document.getElementById('demo2');
+            demo.style.cssText = ''; // Clear all inline styles
+            demo.className = 'demo-box'; // Reset to original class
+        }
+
+        // Exercise 3: classList
+        function addClass() {
+            document.getElementById('demo3').classList.add('highlight');
+        }
+
+        function removeClass() {
+            document.getElementById('demo3').classList.remove('highlight');
+        }
+
+        function toggleClass() {
+            document.getElementById('demo3').classList.toggle('highlight');
+        }
+
+        function checkClass() {
+            const demo = document.getElementById('demo3');
+            const status = document.getElementById('classStatus');
+            const hasClass = demo.classList.contains('highlight');
+
+            status.textContent = hasClass
+                ? '✓ Element HAS the "highlight" class'
+                : '✗ Element DOES NOT have the "highlight" class';
+            status.classList.remove('hidden');
+        }
+
+        // Exercise 4: Attributes
+        function setAttribute() {
+            const demo = document.getElementById('demo4');
+            demo.setAttribute('data-status', 'active');
+            demo.style.borderColor = 'green';
+        }
+
+        function getAttribute() {
+            const demo = document.getElementById('demo4');
+            const status = document.getElementById('attrStatus');
+            const value = demo.getAttribute('data-status');
+
+            status.textContent = `Current data-status value: "${value}"`;
+            status.classList.remove('hidden');
+        }
+
+        function removeAttribute() {
+            const demo = document.getElementById('demo4');
+            demo.removeAttribute('data-status');
+            demo.style.borderColor = '#ddd';
+        }
+
+        function checkAttribute() {
+            const demo = document.getElementById('demo4');
+            const status = document.getElementById('attrStatus');
+            const hasAttr = demo.hasAttribute('data-status');
+
+            status.textContent = hasAttr
+                ? '✓ Element HAS data-status attribute'
+                : '✗ Element DOES NOT have data-status attribute';
+            status.classList.remove('hidden');
+        }
+
+        // Exercise 5: Dataset
+        function readDataset() {
+            const demo = document.getElementById('demo5');
+            const status = document.getElementById('datasetStatus');
+
+            // Note: data-user-id becomes dataset.userId (camelCase)
+            status.innerHTML = `
+                <strong>Dataset contents:</strong><br>
+                User ID: ${demo.dataset.userId}<br>
+                User Name: ${demo.dataset.userName}
+            `;
+            status.classList.remove('hidden');
+        }
+
+        function updateDataset() {
+            const demo = document.getElementById('demo5');
+            demo.dataset.userId = '999';
+
+            const status = document.getElementById('datasetStatus');
+            status.textContent = '✓ User ID updated to 999';
+            status.classList.remove('hidden');
+        }
+
+        function addDataset() {
+            const demo = document.getElementById('demo5');
+            demo.dataset.userRole = 'admin';
+            demo.dataset.userStatus = 'active';
+
+            const status = document.getElementById('datasetStatus');
+            status.textContent = '✓ Added userRole and userStatus attributes';
+            status.classList.remove('hidden');
+        }
+
+        // Exercise 6: Card Editor
+        function updateCard() {
+            const title = document.getElementById('titleInput').value;
+            const desc = document.getElementById('descInput').value;
+
+            if (title) {
+                document.getElementById('cardTitle').textContent = title;
+            }
+
+            if (desc) {
+                document.getElementById('cardDesc').textContent = desc;
+            }
+        }
+
+        function makeCardError() {
+            const card = document.getElementById('liveCard');
+            card.classList.remove('success');
+            card.classList.add('error');
+        }
+
+        function makeCardSuccess() {
+            const card = document.getElementById('liveCard');
+            card.classList.remove('error');
+            card.classList.add('success');
+        }
+
+        function resetCard() {
+            const card = document.getElementById('liveCard');
+            card.className = 'demo-box';
+            document.getElementById('cardTitle').textContent = 'Card Title';
+            document.getElementById('cardDesc').textContent = 'Card Description';
+            document.getElementById('titleInput').value = '';
+            document.getElementById('descInput').value = '';
+        }
+
+        // Exercise 7: XSS Security
+        function unsafeInsert() {
+            const input = document.getElementById('userInput').value;
+            const demo = document.getElementById('xssDemo');
+            const status = document.getElementById('xssStatus');
+
+            demo.innerHTML = input; // DANGEROUS with user input!
+
+            status.innerHTML = `
+                <strong>⚠️ UNSAFE:</strong> innerHTML parsed the HTML.<br>
+                If this was malicious code, it would execute!
+            `;
+            status.style.background = '#ffebee';
+            status.style.color = '#c62828';
+            status.classList.remove('hidden');
+        }
+
+        function safeInsert() {
+            const input = document.getElementById('userInput').value;
+            const demo = document.getElementById('xssDemo');
+            const status = document.getElementById('xssStatus');
+
+            demo.textContent = input; // SAFE - treats as plain text
+
+            status.innerHTML = `
+                <strong>✓ SAFE:</strong> textContent treated input as plain text.<br>
+                HTML tags are displayed, not executed.
+            `;
+            status.style.background = '#e8f5e9';
+            status.style.color = '#2e7d32';
+            status.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
