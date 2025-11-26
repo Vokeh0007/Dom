@@ -3,11 +3,626 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOM Workshop</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="index.js"></script>
+    <title>DOM Masterclass - Complete Curriculum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 56px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 24px;
+            opacity: 0.9;
+        }
+
+        .intro {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .section-icon {
+            font-size: 48px;
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .module-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .module-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .module-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .module-topics {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .module-topics li {
+            color: #888;
+            font-size: 13px;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .module-topics li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .module-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .module-link:hover {
+            background: #5568d3;
+            transform: translateX(5px);
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .project-card .module-number {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .project-card .module-title,
+        .project-card .module-description,
+        .project-card .module-topics li {
+            color: white;
+        }
+
+        .project-card .module-topics li::before {
+            color: white;
+        }
+
+        .project-card::before {
+            background: white;
+        }
+
+        .project-link {
+            background: white;
+            color: #f5576c;
+        }
+
+        .project-link:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .resources {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .resources h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .resources ul {
+            list-style: none;
+        }
+
+        .resources li {
+            padding: 10px 0;
+            color: #666;
+        }
+
+        .resources a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resources a:hover {
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-new {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-important {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
-    <div id="app"></div>
+    <div class="container">
+        <header>
+            <h1>📚 DOM Masterclass</h1>
+            <p class="tagline">Complete Curriculum for Students</p>
+        </header>
+
+        <!-- Introduction -->
+        <div class="intro">
+            <h2>Welcome to the DOM Masterclass! 👋</h2>
+            <p>
+                This comprehensive curriculum takes you from DOM basics to advanced concepts
+                through hands-on modules and real-world projects. Each module includes
+                interactive exercises, code examples, and detailed explanations.
+            </p>
+            <p>
+                <strong>What you'll learn:</strong> DOM manipulation, event handling, traversal,
+                forms, performance optimization, and much more. By the end, you'll be able to
+                build interactive web applications with confidence!
+            </p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p style="text-align: center; color: #666;">
+                <span id="progressText">Start your journey below!</span>
+            </p>
+        </div>
+
+        <!-- Module Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">📖</div>
+                <div class="section-title">
+                    <h2>Learning Modules</h2>
+                    <p>Interactive lessons with exercises and examples</p>
+                </div>
+            </div>
+
+            <div class="module-grid">
+                <!-- Module 1 -->
+                <div class="module-card">
+                    <span class="module-number">Module 1</span>
+                    <span class="status-badge status-new">START HERE</span>
+                    <h3 class="module-title">Browser Environment & DOM Basics</h3>
+                    <p class="module-description">
+                        Understand what the DOM is and how browsers work
+                    </p>
+                    <ul class="module-topics">
+                        <li>What is the DOM?</li>
+                        <li>Browser rendering pipeline</li>
+                        <li>Reflow vs Repaint</li>
+                        <li>Document vs Window</li>
+                        <li>Why DOM matters</li>
+                    </ul>
+                    <a href="module-01-browser-environment.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="module-card">
+                    <span class="module-number">Module 2</span>
+                    <span class="status-badge status-important">CORE SKILL</span>
+                    <h3 class="module-title">DOM Selection</h3>
+                    <p class="module-description">
+                        Master selecting elements - the foundation of DOM manipulation
+                    </p>
+                    <ul class="module-topics">
+                        <li>getElementById, querySelector</li>
+                        <li>querySelectorAll</li>
+                        <li>Live vs Static collections</li>
+                        <li>CSS selectors</li>
+                        <li>Best practices</li>
+                    </ul>
+                    <a href="module-02-selection.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="module-card">
+                    <span class="module-number">Module 3</span>
+                    <h3 class="module-title">DOM Manipulation</h3>
+                    <p class="module-description">
+                        Master textContent, innerHTML, styles, and classList
+                    </p>
+                    <ul class="module-topics">
+                        <li>textContent vs innerHTML</li>
+                        <li>Direct style manipulation</li>
+                        <li>classList best practices</li>
+                        <li>Attributes & dataset API</li>
+                        <li>XSS security</li>
+                    </ul>
+                    <a href="module-03-manipulation.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="module-card">
+                    <span class="module-number">Module 4</span>
+                    <h3 class="module-title">Creating & Removing Elements</h3>
+                    <p class="module-description">
+                        Learn createElement, appendChild, and Document Fragments
+                    </p>
+                    <ul class="module-topics">
+                        <li>createElement() basics</li>
+                        <li>appendChild vs prepend</li>
+                        <li>insertAdjacentElement</li>
+                        <li>Removing elements</li>
+                        <li>Performance with fragments</li>
+                    </ul>
+                    <a href="module-04-create-remove.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 5 -->
+                <div class="module-card">
+                    <span class="module-number">Module 5</span>
+                    <h3 class="module-title">DOM Traversal</h3>
+                    <p class="module-description">
+                        Navigate the DOM tree like a pro
+                    </p>
+                    <ul class="module-topics">
+                        <li>Parent navigation</li>
+                        <li>Children & siblings</li>
+                        <li>closest() method</li>
+                        <li>matches() & contains()</li>
+                        <li>Real-world examples</li>
+                    </ul>
+                    <a href="module-05-traversal.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 6 -->
+                <div class="module-card">
+                    <span class="module-number">Module 6</span>
+                    <span class="status-badge status-important">IMPORTANT</span>
+                    <h3 class="module-title">Events - The Backbone</h3>
+                    <p class="module-description">
+                        Master event handling and delegation
+                    </p>
+                    <ul class="module-topics">
+                        <li>addEventListener basics</li>
+                        <li>Event object properties</li>
+                        <li>Bubbling & capturing</li>
+                        <li>Event delegation pattern</li>
+                        <li>Keyboard & form events</li>
+                    </ul>
+                    <a href="module-06-events.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 7 -->
+                <div class="module-card">
+                    <span class="module-number">Module 7</span>
+                    <h3 class="module-title">Advanced DOM Concepts</h3>
+                    <p class="module-description">
+                        Measurements, observers, and performance
+                    </p>
+                    <ul class="module-topics">
+                        <li>Element measurements</li>
+                        <li>getBoundingClientRect</li>
+                        <li>requestAnimationFrame</li>
+                        <li>Intersection Observer</li>
+                        <li>Mutation Observer</li>
+                    </ul>
+                    <a href="module-07-advanced.html" class="module-link">Start Module →</a>
+                </div>
+
+                <!-- Module 8 -->
+                <div class="module-card">
+                    <span class="module-number">Module 8</span>
+                    <h3 class="module-title">Forms & Validation</h3>
+                    <p class="module-description">
+                        Handle forms and validate user input
+                    </p>
+                    <ul class="module-topics">
+                        <li>Form submit handling</li>
+                        <li>Real-time validation</li>
+                        <li>FormData API</li>
+                        <li>Checkboxes & radios</li>
+                        <li>Complete form example</li>
+                    </ul>
+                    <a href="module-08-forms.html" class="module-link">Start Module →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🚀</div>
+                <div class="section-title">
+                    <h2>Practical Projects</h2>
+                    <p>Apply your knowledge with real-world applications</p>
+                </div>
+            </div>
+
+            <div class="module-grid">
+                <!-- Todo App -->
+                <div class="module-card project-card">
+                    <span class="module-number">Project 1</span>
+                    <h3 class="module-title">Advanced Todo App</h3>
+                    <p class="module-description">
+                        Full-featured task manager with localStorage
+                    </p>
+                    <ul class="module-topics">
+                        <li>Event delegation</li>
+                        <li>Filter & search</li>
+                        <li>LocalStorage persistence</li>
+                        <li>Priority badges</li>
+                        <li>Statistics tracking</li>
+                    </ul>
+                    <a href="projects/todo-app.html" class="module-link project-link">Launch Project →</a>
+                </div>
+
+                <!-- Modal Component -->
+                <div class="module-card project-card">
+                    <span class="module-number">Project 2</span>
+                    <h3 class="module-title">Modal Components</h3>
+                    <p class="module-description">
+                        Reusable modal system with multiple types
+                    </p>
+                    <ul class="module-topics">
+                        <li>Dynamic modal creation</li>
+                        <li>Form modals</li>
+                        <li>Confirmation dialogs</li>
+                        <li>Nested modals</li>
+                        <li>Keyboard navigation</li>
+                    </ul>
+                    <a href="projects/modal-component.html" class="module-link project-link">Launch Project →</a>
+                </div>
+
+                <!-- Image Gallery -->
+                <div class="module-card project-card">
+                    <span class="module-number">Project 3</span>
+                    <h3 class="module-title">Interactive Gallery</h3>
+                    <p class="module-description">
+                        Image gallery with lightbox and filters
+                    </p>
+                    <ul class="module-topics">
+                        <li>Grid layout</li>
+                        <li>Lightbox with navigation</li>
+                        <li>Search & filter</li>
+                        <li>Keyboard controls</li>
+                        <li>Smooth animations</li>
+                    </ul>
+                    <a href="projects/image-gallery.html" class="module-link project-link">Launch Project →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="resources">
+            <h2>📚 Additional Resources</h2>
+            <ul>
+                <li>
+                    <strong>Module Explanations:</strong>
+                    <a href="MODULE-EXPLANATIONS.md">Comprehensive module guide</a>
+                    - In-depth explanations, code examples, and teaching tips for all modules
+                </li>
+                <li>
+                    <strong>Trainer Notes:</strong>
+                    <a href="DOM-Trainer-Notes.md">Complete curriculum notes</a>
+                    - Detailed teaching guide with exercises and solutions
+                </li>
+                <li>
+                    <strong>Practice Files:</strong>
+                    Your existing tt.html, index.html, and index.js for experimentation
+                </li>
+                <li>
+                    <strong>MDN Web Docs:</strong>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model" target="_blank">
+                        Official DOM documentation
+                    </a>
+                </li>
+                <li>
+                    <strong>JavaScript.info:</strong>
+                    <a href="https://javascript.info/document" target="_blank">
+                        DOM tutorial series
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>🎓 DOM Masterclass - From Basics to Advanced</p>
+        <p>Built with ❤️ for students learning web development</p>
+    </footer>
+
+    <script>
+        // Track progress (simple localStorage tracking)
+        const modules = [
+            'module-01-browser-environment.html',
+            'module-02-selection.html',
+            'module-03-manipulation.html',
+            'module-04-create-remove.html',
+            'module-05-traversal.html',
+            'module-06-events.html',
+            'module-07-advanced.html',
+            'module-08-forms.html',
+            'projects/todo-app.html',
+            'projects/modal-component.html',
+            'projects/image-gallery.html'
+        ];
+
+        // Load progress
+        const completedModules = JSON.parse(localStorage.getItem('completedModules') || '[]');
+        const progress = (completedModules.length / modules.length) * 100;
+
+        // Update progress bar
+        document.getElementById('progressFill').style.width = progress + '%';
+
+        // Update progress text
+        if (progress === 0) {
+            document.getElementById('progressText').textContent = 'Start your journey below!';
+        } else if (progress === 100) {
+            document.getElementById('progressText').textContent = '🎉 Congratulations! You\'ve completed the curriculum!';
+        } else {
+            document.getElementById('progressText').textContent =
+                `You've completed ${completedModules.length} of ${modules.length} modules (${progress.toFixed(0)}%)`;
+        }
+
+        // Mark module as completed when link is clicked
+        document.querySelectorAll('.module-link, .project-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+
+                if (!completedModules.includes(href)) {
+                    completedModules.push(href);
+                    localStorage.setItem('completedModules', JSON.stringify(completedModules));
+                }
+            });
+        });
+    </script>
 </body>
 </html>
